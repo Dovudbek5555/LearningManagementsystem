@@ -1,8 +1,10 @@
 package com.example.test_system.Entity;
 
-import com.example.test_system.Entity.Enums.RoleEnum;
+import com.example.test_system.Entity.Enums.DifficultyEnum;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -10,10 +12,12 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Role {
+public class Y_Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String question;
+    private String answer;
     @Enumerated(EnumType.STRING)
-    private RoleEnum roleEnum;
+    private DifficultyEnum difficulty;
 }

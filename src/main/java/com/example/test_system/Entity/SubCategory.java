@@ -1,6 +1,5 @@
 package com.example.test_system.Entity;
 
-import com.example.test_system.Entity.Enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,10 +9,11 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Role {
+public class SubCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Enumerated(EnumType.STRING)
-    private RoleEnum roleEnum;
+    private String name;
+    @ManyToOne
+    private Category category;
 }
