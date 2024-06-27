@@ -3,8 +3,15 @@ package com.example.test_system.entity;
 import com.example.test_system.entity.Enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,7 +19,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Builder
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -36,4 +43,40 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private boolean accountNonExpired = true;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled;
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(roleEnum.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return phoneNumber;
+    }
+
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 }
