@@ -1,9 +1,6 @@
 package com.example.test_system.service;
 
-import com.example.test_system.entity.Group;
-import com.example.test_system.entity.QuestionList;
-import com.example.test_system.entity.SubCategory;
-import com.example.test_system.entity.Test;
+import com.example.test_system.entity.*;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.TestDto;
 import com.example.test_system.repository.GroupRepository;
@@ -11,10 +8,13 @@ import com.example.test_system.repository.QuestionListRepository;
 import com.example.test_system.repository.SubCategoryRepository;
 import com.example.test_system.repository.TestRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +42,27 @@ public class TestService {
                 .subCategory(subCategory)
                 .build();
         testRepository.save(test);
-        return new ApiResponse("Test successfully saved",true);
+        return new ApiResponse("Test successfully saved",true, HttpStatus.OK,null);
+    }
+
+    public ApiResponse getOneTest(Integer id) {
+        List<String> oQuestions=new ArrayList<>();
+        List<String> yQuestions=new ArrayList<>();
+        Test test = testRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Test not found"));
+        for (O_Question oQuestion : test.getQuestionList().getOQuestions()) {
+            oQuestions.add(oQuestion.getQuestion());
+        }
+        for (Y_Question yQuestion : test.getQuestionList().getYQuestions()) {
+            yQuestions.add(yQuestion.getQuestion());
+        }
+        TestDto testDto=TestDto.builder()
+                .startActiveDate(test.getStartActiveDate())
+                .finishActiveDate(test.getFinishActiveDate())
+                .passingScore(test.getPassingScore())
+                .duration((int) test.getDuration().toMinutes())
+                .oQuestion(oQuestions)
+                .yQuestion(yQuestions)
+                .build();
+        return new ApiResponse("Success",true,HttpStatus.OK,testDto);
     }
 }

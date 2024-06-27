@@ -4,6 +4,7 @@ import com.example.test_system.entity.QuestionList;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +20,6 @@ public class TestDto {
     private Integer passingScore;
     private Integer subCategoryId;
     private Integer groupId;
+    private List<String> oQuestion;
+    private List<String> yQuestion;
 }
