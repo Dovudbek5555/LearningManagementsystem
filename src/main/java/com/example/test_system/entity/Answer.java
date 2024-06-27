@@ -1,4 +1,4 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,18 +7,18 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Builder
-public class Address {
+@Entity
+public class Answer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
-    private String lat;
+    private Integer questionId;
 
     @Column(nullable = false)
-    private String lng;
+    private String answer;
 
 }

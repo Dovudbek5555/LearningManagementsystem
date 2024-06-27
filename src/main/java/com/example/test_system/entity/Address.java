@@ -1,9 +1,7 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -11,14 +9,16 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Collection {
+public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany
-    private List<O_Question> oQuestions;
+    @Column(nullable = false)
+    private String lat;
 
-    @OneToMany
-    private List<Y_Question> yQuestions;
+    @Column(nullable = false)
+    private String lng;
+
 }
