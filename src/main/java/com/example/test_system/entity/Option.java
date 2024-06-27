@@ -1,6 +1,6 @@
 package com.example.test_system.entity;
 
-import com.example.test_system.entity.Enums.OptionEnum;
+import com.example.test_system.entity.enums.OptionEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
