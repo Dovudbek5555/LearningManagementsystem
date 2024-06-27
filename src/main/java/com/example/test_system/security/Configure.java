@@ -28,7 +28,7 @@ public class Configure {
 
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> (UserDetails) userRepository.findByPhoneNumber(username)
+        return username -> userRepository.findByPhoneNumber(username)
                 .orElseThrow(() -> GenericException.builder().message("User not found").statusCode(404).build());
     }
 
