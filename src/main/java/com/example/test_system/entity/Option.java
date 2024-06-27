@@ -1,6 +1,6 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
-import com.example.test_system.Entity.Enums.OptionEnum;
+import com.example.test_system.entity.Enums.OptionEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,5 +18,8 @@ public class Option {
     @Enumerated(EnumType.STRING)
     private OptionEnum optionEnum;
 
-    private boolean status;
+    @Column(nullable = false)
+    private String description;
+
+    private Boolean status;
 }

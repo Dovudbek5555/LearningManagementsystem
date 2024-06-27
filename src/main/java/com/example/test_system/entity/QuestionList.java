@@ -1,7 +1,9 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -9,14 +11,14 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-public class SubCategory {
+public class QuestionList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @OneToMany
+    private List<O_Question> oQuestions;
 
-    @ManyToOne
-    private Category category;
+    @OneToMany
+    private List<Y_Question> yQuestions;
 }

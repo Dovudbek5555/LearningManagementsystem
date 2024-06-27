@@ -1,9 +1,8 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.security.Timestamp;
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -14,13 +13,12 @@ import java.time.LocalDate;
 @Entity
 @Builder
 public class Test {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    private Collection collection;
+    private QuestionList questionList;
 
     private LocalDate startActiveDate;
 

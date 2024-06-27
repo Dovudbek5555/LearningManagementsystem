@@ -1,11 +1,10 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
-import com.example.test_system.Entity.Enums.RoleEnum;
+import com.example.test_system.entity.Enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -18,10 +17,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private String firstname;
 
     private String lastname;
 
+    @Column(unique = true, nullable = false)
     private String phoneNumber;
 
     private Date birthDate;
@@ -32,8 +33,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleEnum roleEnum;
 
+    @Column(nullable = false)
     private String password;
 
-    @ManyToOne
-    private Group group;
 }

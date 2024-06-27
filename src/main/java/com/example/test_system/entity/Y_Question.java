@@ -1,9 +1,8 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
+import com.example.test_system.entity.Enums.DifficultyEnum;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -11,20 +10,19 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Group {
+public class Y_Question {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(unique = true, nullable = false)
-    private String name;
+    private String question;
 
     @ManyToOne
-    private Category category;
+    private SubCategory subCategory;
 
-    @ManyToOne
-    private User teacherId;
+    @Enumerated(EnumType.STRING)
+    private DifficultyEnum difficulty;
 
-    @OneToMany
-    private List<User> students;
 }

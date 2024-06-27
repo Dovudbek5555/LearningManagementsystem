@@ -1,4 +1,4 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

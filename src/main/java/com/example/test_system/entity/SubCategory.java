@@ -1,4 +1,4 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,14 +9,14 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Address {
+public class SubCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private String lat;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-    @Column(nullable = false)
-    private String lng;
+    @ManyToOne
+    private Category category;
 }

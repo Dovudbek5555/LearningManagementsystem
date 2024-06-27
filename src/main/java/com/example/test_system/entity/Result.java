@@ -1,11 +1,9 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
-import com.example.test_system.Payload.AnswerDto;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.util.List;
 
 @Getter
@@ -34,5 +32,5 @@ public class Result {
     @Column(nullable = false)
     private Timestamp endTime;
 
-    private boolean status;
+    private Boolean checked;
 }

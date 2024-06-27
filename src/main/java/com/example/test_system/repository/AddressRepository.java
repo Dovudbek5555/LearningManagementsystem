@@ -1,6 +1,6 @@
-package com.example.test_system.Repository;
+package com.example.test_system.repository;
 
-import com.example.test_system.Entity.Address;
+import com.example.test_system.entity.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
