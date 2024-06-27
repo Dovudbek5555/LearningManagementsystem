@@ -6,4 +6,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(collectionResourceRel = "option", path = "list")
 public interface OptionRepository extends JpaRepository<Option, Integer> {
+    boolean existsByOptionEnum(String optionEnum);
 }
