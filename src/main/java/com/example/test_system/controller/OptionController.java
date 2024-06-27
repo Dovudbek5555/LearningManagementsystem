@@ -1,9 +1,7 @@
 package com.example.test_system.controller;
 
-import com.example.test_system.entity.Option;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.OptionDto;
-import com.example.test_system.repository.OptionRepository;
 import com.example.test_system.service.OptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
