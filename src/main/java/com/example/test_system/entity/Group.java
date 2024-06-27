@@ -26,5 +26,5 @@ public class Group {
     private User teacherId;
 
     @OneToMany
-    private List<User> users;
+    private List<User> students;
 }
