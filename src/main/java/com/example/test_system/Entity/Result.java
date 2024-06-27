@@ -1,10 +1,12 @@
 package com.example.test_system.Entity;
 
+import com.example.test_system.Payload.AnswerDto;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,6 +25,9 @@ public class Result {
 
     @ManyToOne
     private Test testId;
+
+    @OneToMany
+    private List<Answer> answer;
 
     @Column(nullable = false)
     private Timestamp startTime;
