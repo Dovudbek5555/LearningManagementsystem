@@ -18,10 +18,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private String firstname;
 
     private String lastname;
 
+    @Column(unique = true, nullable = false)
     private String phoneNumber;
 
     private Date birthDate;
@@ -32,8 +34,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleEnum roleEnum;
 
+    @Column(nullable = false)
     private String password;
 
-    @ManyToOne
-    private Group group;
 }

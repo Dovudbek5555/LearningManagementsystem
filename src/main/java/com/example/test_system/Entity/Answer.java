@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @Entity
 public class Answer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -19,4 +20,5 @@ public class Answer {
 
     @Column(nullable = false)
     private String answer;
+
 }
