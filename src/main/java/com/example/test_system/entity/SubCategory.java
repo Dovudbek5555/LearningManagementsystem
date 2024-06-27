@@ -1,9 +1,7 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -11,20 +9,14 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Group {
+public class SubCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @ManyToOne
     private Category category;
-
-    @ManyToOne
-    private User teacherId;
-
-    @OneToMany
-    private List<User> users;
 }

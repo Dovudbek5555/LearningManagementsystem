@@ -1,6 +1,6 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
-import com.example.test_system.Entity.Enums.DifficultyEnum;
+import com.example.test_system.entity.Enums.DifficultyEnum;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,11 +1,10 @@
-package com.example.test_system.Entity;
+package com.example.test_system.entity;
 
-import com.example.test_system.Entity.Enums.RoleEnum;
+import com.example.test_system.entity.Enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
-import java.util.Set;
 
 @Getter
 @Setter
