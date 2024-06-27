@@ -6,10 +6,7 @@ import com.example.test_system.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/start-test")
@@ -21,5 +18,9 @@ public class TestController {
     public HttpEntity<?> saveTest(@RequestBody TestDto testDto) {
         ApiResponse apiResponse = testService.saveTest(testDto);
         return ResponseEntity.status(apiResponse.isSuccess()? 200:400).body(apiResponse);
+    }
+    @GetMapping("/{id}")
+    public HttpEntity<?> getTests(@PathVariable Integer id){
+        return null;
     }
 }
