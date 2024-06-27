@@ -15,7 +15,6 @@ import java.util.List;
 @Entity
 @Builder
 public class Result {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -35,4 +34,5 @@ public class Result {
     @Column(nullable = false)
     private Timestamp endTime;
 
+    private boolean status;
 }

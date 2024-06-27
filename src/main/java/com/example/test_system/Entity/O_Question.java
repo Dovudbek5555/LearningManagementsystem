@@ -18,9 +18,14 @@ public class O_Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true, nullable = false)
     private String question;
+
     @OneToMany
     private List<Option> optionList;
+
+    @ManyToOne
+    private SubCategory subCategory;
 
     @Enumerated(EnumType.STRING)
     private DifficultyEnum difficulty;

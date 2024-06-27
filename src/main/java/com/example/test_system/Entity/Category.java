@@ -13,7 +13,6 @@ import lombok.*;
 @Entity
 @Builder
 public class Category {
-
     @Id
     @GeneratedValue
     private Integer id;

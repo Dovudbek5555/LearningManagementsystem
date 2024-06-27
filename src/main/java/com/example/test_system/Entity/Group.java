@@ -22,9 +22,9 @@ public class Group {
     @ManyToOne
     private Category category;
 
-    @OneToOne
+    @ManyToOne
     private User teacherId;
 
     @OneToMany
-    private List<User> studentId;
+    private List<User> users;
 }
