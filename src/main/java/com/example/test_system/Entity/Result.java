@@ -3,7 +3,8 @@ package com.example.test_system.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.sql.Timestamp;
+import java.time.Duration;
 
 @Getter
 @Setter
@@ -11,20 +12,22 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Group {
+public class Result {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true, nullable = false)
-    private String name;
+    @ManyToOne
+    private User studentId;
 
     @ManyToOne
-    private Category category;
+    private Test testId;
 
-    @OneToOne
-    private User teacherId;
+    @Column(nullable = false)
+    private Timestamp startTime;
 
-    @OneToMany
-    private List<User> studentId;
+    @Column(nullable = false)
+    private Timestamp endTime;
+
 }
