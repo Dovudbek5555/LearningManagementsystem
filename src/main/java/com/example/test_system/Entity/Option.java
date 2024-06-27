@@ -18,5 +18,8 @@ public class Option {
     @Enumerated(EnumType.STRING)
     private OptionEnum optionEnum;
 
-    private boolean status;
+    @Column(nullable = false)
+    private String description;
+
+    private Boolean status;
 }

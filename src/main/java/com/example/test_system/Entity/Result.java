@@ -34,5 +34,5 @@ public class Result {
     @Column(nullable = false)
     private Timestamp endTime;
 
-    private boolean status;
+    private Boolean checked;
 }

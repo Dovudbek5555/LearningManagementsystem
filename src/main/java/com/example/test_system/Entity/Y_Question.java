@@ -26,4 +26,5 @@ public class Y_Question {
 
     @Enumerated(EnumType.STRING)
     private DifficultyEnum difficulty;
+
 }
