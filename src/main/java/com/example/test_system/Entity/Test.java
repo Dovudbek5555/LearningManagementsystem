@@ -29,6 +29,7 @@ public class Test {
     //integer da minut kiritiladi keyin Duration.minutOf(integer)
     private Duration duration;
 
+    @Column(nullable = false)
     private Integer passingScore;
 
     @ManyToOne

@@ -13,11 +13,17 @@ import java.util.List;
 @Entity
 @Builder
 public class Y_Question {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(unique = true, nullable = false)
     private String question;
-    private String answer;
+
+    @ManyToOne
+    private SubCategory subCategory;
+
     @Enumerated(EnumType.STRING)
     private DifficultyEnum difficulty;
 }

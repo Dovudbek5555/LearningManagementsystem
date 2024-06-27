@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Builder
 public class Collection {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

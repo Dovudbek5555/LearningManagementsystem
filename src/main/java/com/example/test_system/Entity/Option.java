@@ -1,9 +1,7 @@
 package com.example.test_system.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.test_system.Entity.Enums.OptionEnum;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -16,6 +14,9 @@ public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
-    private boolean isCorrect;
+
+    @Enumerated(EnumType.STRING)
+    private OptionEnum optionEnum;
+
+    private boolean status;
 }
