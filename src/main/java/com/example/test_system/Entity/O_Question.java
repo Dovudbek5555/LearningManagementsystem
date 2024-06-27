@@ -13,12 +13,15 @@ import java.util.List;
 @Entity
 @Builder
 public class O_Question {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String question;
     @OneToMany
     private List<Option> optionList;
+
     @Enumerated(EnumType.STRING)
     private DifficultyEnum difficulty;
 }
