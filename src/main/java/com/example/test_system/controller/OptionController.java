@@ -22,4 +22,19 @@ public class OptionController {
         ApiResponse apiResponse = optionService.saveOption(optionDto);
         return ResponseEntity.status(apiResponse.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(apiResponse);
     }
+    @GetMapping
+    public HttpEntity<?> getOptions() {
+        ApiResponse optionList = optionService.getOptionList();
+        return ResponseEntity.status(optionList.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(optionList);
+    }
+    @PutMapping
+    public HttpEntity<?> updateOption(@RequestBody OptionDto optionDto) {
+        ApiResponse apiResponse = optionService.updateOption(optionDto);
+        return ResponseEntity.status(apiResponse.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(apiResponse);
+    }
+    @DeleteMapping("/{id}")
+    public HttpEntity<?> deleteOption(@PathVariable Integer id) {
+        ApiResponse apiResponse = optionService.deleteOption(id);
+        return ResponseEntity.status(apiResponse.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(apiResponse);
+    }
 }

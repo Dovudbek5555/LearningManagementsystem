@@ -59,8 +59,8 @@ public class OptionService {
         return new ApiResponse("Success", true, HttpStatus.OK, optionDto);
     }
 
-    public ApiResponse updateOption(OptionDto optionDto, Integer id){
-        Option option = optionRepository.findById(id).orElseThrow(() -> new ResourceAccessException("option not found"));
+    public ApiResponse updateOption(OptionDto optionDto){
+        Option option = optionRepository.findById(optionDto.getId()).orElseThrow(() -> new ResourceAccessException("option not found"));
         option.setId(option.getId());
         option.setOptionEnum(OptionEnum.valueOf(optionDto.getOptionEnum()));
         option.setDescription(option.getDescription());
