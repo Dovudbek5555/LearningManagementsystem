@@ -27,7 +27,7 @@ public class Result {
     private Test testId;
 
     @OneToMany
-    private List<AnswerDto> answerDtos;
+    private List<Answer> answer;
 
     @Column(nullable = false)
     private Timestamp startTime;

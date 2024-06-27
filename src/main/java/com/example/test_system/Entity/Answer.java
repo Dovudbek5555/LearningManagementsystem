@@ -1,4 +1,4 @@
-package com.example.test_system.Payload;
+package com.example.test_system.Entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,8 +11,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AnswerDto {
+@Entity
+public class Answer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private Integer questionId;
+
     private String answer;
 }
