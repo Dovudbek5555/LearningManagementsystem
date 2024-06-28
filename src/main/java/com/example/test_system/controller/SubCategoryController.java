@@ -18,29 +18,29 @@ public class SubCategoryController {
     @PostMapping
     public HttpEntity<ApiResponse> addSubCategory(@RequestBody SubCategoryDto subCategoryDto) {
         ApiResponse apiResponse = subCategoryService.saveSubCategory(subCategoryDto);
-        return ResponseEntity.status(apiResponse.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @GetMapping
     public HttpEntity<ApiResponse> getSubCategoryList() {
         ApiResponse apiResponse = subCategoryService.getSubCategory();
-        return ResponseEntity.status(apiResponse.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
 
     }
     @GetMapping("/{id}")
     public HttpEntity<ApiResponse> getSubCategoryById(@PathVariable Integer id) {
         ApiResponse subCategory = subCategoryService.getOneSubCategory(id);
-        return ResponseEntity.status(subCategory.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(subCategory);
+        return ResponseEntity.status(subCategory.getHttpStatus()).body(subCategory);
     }
     @PutMapping
     public HttpEntity<ApiResponse> updateSubCategory(@RequestBody SubCategoryDto subCategoryDto) {
         ApiResponse apiResponse = subCategoryService.updateSubCategory(subCategoryDto);
-        return ResponseEntity.status(apiResponse.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
     @DeleteMapping("/{id}")
     public HttpEntity<ApiResponse> deleteSubCategory(@PathVariable Integer id) {
         ApiResponse apiResponse = subCategoryService.deleteSubCategory(id);
-        return ResponseEntity.status(apiResponse.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 }
 

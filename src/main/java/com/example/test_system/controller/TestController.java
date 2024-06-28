@@ -18,27 +18,27 @@ public class TestController {
     @PostMapping
     public HttpEntity<ApiResponse> saveTest(@RequestBody TestDto testDto) {
         ApiResponse apiResponse = testService.saveTest(testDto);
-        return ResponseEntity.status(apiResponse.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @GetMapping("/{id}")
     public HttpEntity<ApiResponse> getTests(@PathVariable Integer id){
         ApiResponse oneTest = testService.getOneTest(id);
-        return ResponseEntity.status(oneTest.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(oneTest);
+        return ResponseEntity.status(oneTest.getHttpStatus()).body(oneTest);
     }
     @GetMapping
     public HttpEntity<ApiResponse> getTests(){
         ApiResponse allTests = testService.getAllTests();
-        return ResponseEntity.status(allTests.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(allTests);
+        return ResponseEntity.status(allTests.getHttpStatus()).body(allTests);
     }
     @PutMapping
     public HttpEntity<ApiResponse> updateTest(@RequestBody TestDto testDto){
         ApiResponse apiResponse = testService.updateTest(testDto);
-        return ResponseEntity.status(apiResponse.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
     @DeleteMapping("/{id}")
     public HttpEntity<ApiResponse> deleteTest(@PathVariable Integer id){
         ApiResponse apiResponse = testService.deleteTest(id);
-        return ResponseEntity.status(apiResponse.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 }
