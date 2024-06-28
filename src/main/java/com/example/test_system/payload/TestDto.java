@@ -18,6 +18,5 @@ public class TestDto {
     private Integer duration;
     private Integer passingScore;
     private Integer subCategoryId;
-    private Integer groupId;
     private List<Question> oQuestion;
 }
