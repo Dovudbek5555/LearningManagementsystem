@@ -22,6 +22,7 @@ public class Option {
     private String description;
 
     private Boolean status;
+
     @ManyToOne
     private O_Question oQuestion;
 }
