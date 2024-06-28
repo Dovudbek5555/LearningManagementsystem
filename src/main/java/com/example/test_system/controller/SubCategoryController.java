@@ -24,6 +24,7 @@ public class SubCategoryController {
     public HttpEntity<?> getSubCategoryList() {
         ApiResponse apiResponse = subCategoryService.getSubCategory();
         return ResponseEntity.status(apiResponse.isSuccess() ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(apiResponse);
+
     }
 }
 
