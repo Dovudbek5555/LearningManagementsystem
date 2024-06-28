@@ -5,7 +5,6 @@ import com.example.test_system.payload.OptionDto;
 import com.example.test_system.service.OptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,22 +14,22 @@ import org.springframework.web.bind.annotation.*;
 public class OptionController {
     private final OptionService optionService;
 
-    @PostMapping
+    @PostMapping("/save")
     public HttpEntity<?> addOption(@RequestBody OptionDto optionDto) {
         ApiResponse apiResponse = optionService.saveOption(optionDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
-    @GetMapping
+    @GetMapping("/list")
     public HttpEntity<ApiResponse> getOptions() {
         ApiResponse apiResponse = optionService.getOptionList();
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
-    @PutMapping
+    @PutMapping("/update/{id}")
     public HttpEntity<ApiResponse> updateOption(@RequestBody OptionDto optionDto) {
         ApiResponse apiResponse = optionService.updateOption(optionDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public HttpEntity<ApiResponse> deleteOption(@PathVariable Integer id) {
         ApiResponse apiResponse = optionService.deleteOption(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);

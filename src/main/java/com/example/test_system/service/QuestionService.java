@@ -1,12 +1,10 @@
 package com.example.test_system.service;
 
-import com.example.test_system.entity.Option;
 import com.example.test_system.entity.Question;
 import com.example.test_system.entity.SubCategory;
 import com.example.test_system.entity.enums.DifficultyEnum;
 import com.example.test_system.exceptions.GenericException;
 import com.example.test_system.payload.ApiResponse;
-import com.example.test_system.payload.OptionDto;
 import com.example.test_system.payload.QuestionDto;
 import com.example.test_system.repository.QuestionRepository;
 import com.example.test_system.repository.SubCategoryRepository;
