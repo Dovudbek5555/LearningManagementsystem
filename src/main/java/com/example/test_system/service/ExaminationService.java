@@ -58,7 +58,6 @@ public class ExaminationService {
     }
 
 
-
     public boolean isExamAvailable(Integer examId) {
         return examRepository.findById(examId)
                 .map(exam -> exam.getFinishDate().isAfter(LocalDate.now()))

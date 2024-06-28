@@ -3,6 +3,7 @@ package com.example.test_system.service;
 import com.example.test_system.entity.Category;
 import com.example.test_system.entity.Group;
 import com.example.test_system.entity.User;
+import com.example.test_system.exceptions.GenericException;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.GroupDto;
 import com.example.test_system.repository.CategoryRepository;
@@ -27,9 +28,9 @@ public class GroupService {
         boolean existsed = groupRepository.existsByName(groupDto.getName());
         if (!existsed){
             Category category = categoryRepository.findById(groupDto.getCategoryId())
-                    .orElseThrow(() -> new ResourceAccessException("Category not found"));
+                    .orElseThrow(() -> GenericException.builder().message("Category not found").build());
                 User user1 = userRepository.findById(groupDto.getTeacherId())
-                        .orElseThrow(() -> new ResourceAccessException("Teacher not found"));
+                        .orElseThrow(() -> GenericException.builder().message("User not found").build());
                 Group group= Group.builder()
                         .name(groupDto.getName())
                         .category(category)
@@ -57,7 +58,8 @@ public class GroupService {
     }
 
     public ApiResponse getOneGroup(Integer id) {
-        Group group = groupRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Group not found"));
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> GenericException.builder().message("Group not found").build());
         GroupDto groupDto= GroupDto.builder()
                 .name(group.getName())
                 .categoryId(group.getCategory().getId())
@@ -67,11 +69,14 @@ public class GroupService {
     }
 
     public ApiResponse updateGroup(GroupDto groupDto) {
-        Group group = groupRepository.findById(groupDto.getId()).orElseThrow(() -> new ResourceAccessException("Group not found"));
+        Group group = groupRepository.findById(groupDto.getId())
+                .orElseThrow(() -> GenericException.builder().message("Group not found").build());
         boolean existsed = groupRepository.existsByName(groupDto.getName());
         if (!existsed){
-            Category category = categoryRepository.findById(groupDto.getCategoryId()).orElseThrow(() -> new ResourceAccessException("Category not found"));
-            User user = userRepository.findById(groupDto.getTeacherId()).orElseThrow(() -> new ResourceAccessException("Teacher not found"));
+            Category category = categoryRepository.findById(groupDto.getCategoryId())
+                    .orElseThrow(() -> GenericException.builder().message("Category not found").build());
+            User user = userRepository.findById(groupDto.getTeacherId())
+                    .orElseThrow(() -> GenericException.builder().message("User not found").build());
             group.setName(groupDto.getName());
             group.setCategory(category);
             group.setTeacherId(user);
@@ -82,7 +87,8 @@ public class GroupService {
     }
 
     public ApiResponse deleteGroup(Integer id) {
-        Group group = groupRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Group not found"));
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> GenericException.builder().message("Group not found").build());
         groupRepository.delete(group);
         return new ApiResponse("Success",true,HttpStatus.OK,null);
     }
