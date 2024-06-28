@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Y_Question {
+public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +24,4 @@ public class Y_Question {
 
     @Enumerated(EnumType.STRING)
     private DifficultyEnum difficulty;
-
 }

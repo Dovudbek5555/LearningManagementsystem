@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,8 +18,8 @@ public class Test {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    private QuestionList questionList;
+    @OneToMany
+    private List<Question> questionList;
 
     private LocalDate createdAt;
 
