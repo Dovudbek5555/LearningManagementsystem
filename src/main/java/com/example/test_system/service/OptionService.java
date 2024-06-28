@@ -31,7 +31,6 @@ public class OptionService {
                 .build());
         if (!exists) {
             Option option = Option.builder()
-                    .id(optionDto.getId())
                     .optionEnum(OptionEnum.valueOf(optionDto.getOptionEnum()))
                     .description(optionDto.getDescription())
                     .status(optionDto.getStatus())

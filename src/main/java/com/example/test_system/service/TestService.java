@@ -4,7 +4,6 @@ import com.example.test_system.entity.*;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.TestDto;
 import com.example.test_system.repository.GroupRepository;
-import com.example.test_system.repository.QuestionListRepository;
 import com.example.test_system.repository.SubCategoryRepository;
 import com.example.test_system.repository.TestRepository;
 import lombok.RequiredArgsConstructor;
