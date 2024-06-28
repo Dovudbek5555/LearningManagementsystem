@@ -48,16 +48,16 @@ public class OptionService {
         return new ApiResponse("Success", true, HttpStatus.OK, optionDtos);
     }
 
-    public ApiResponse getOneOption(Integer id){
-        Option option = optionRepository.findById(id).orElseThrow(() -> new ResourceAccessException("option not found"));
-        OptionDto optionDto = OptionDto.builder()
-                .id(option.getId())
-                .optionEnum(String.valueOf(option.getOptionEnum()))
-                .description(option.getDescription())
-                .status(option.getStatus())
-                .build();
-        return new ApiResponse("Success", true, HttpStatus.OK, optionDto);
-    }
+//    public ApiResponse getOneOption(Integer id){
+//        Option option = optionRepository.findById(id).orElseThrow(() -> new ResourceAccessException("option not found"));
+//        OptionDto optionDto = OptionDto.builder()
+//                .id(option.getId())
+//                .optionEnum(String.valueOf(option.getOptionEnum()))
+//                .description(option.getDescription())
+//                .status(option.getStatus())
+//                .build();
+//        return new ApiResponse("Success", true, HttpStatus.OK, optionDto);
+//    }
 
     public ApiResponse updateOption(OptionDto optionDto){
         Option option = optionRepository.findById(optionDto.getId()).orElseThrow(() -> new ResourceAccessException("option not found"));
