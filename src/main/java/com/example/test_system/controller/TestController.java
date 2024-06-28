@@ -5,7 +5,6 @@ import com.example.test_system.payload.TestDto;
 import com.example.test_system.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
