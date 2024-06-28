@@ -18,21 +18,21 @@ public class OptionController {
     @PostMapping
     public HttpEntity<?> addOption(@RequestBody OptionDto optionDto) {
         ApiResponse apiResponse = optionService.saveOption(optionDto);
-        return ResponseEntity.status(apiResponse.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @GetMapping
-    public HttpEntity<?> getOptions() {
-        ApiResponse optionList = optionService.getOptionList();
-        return ResponseEntity.status(optionList.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(optionList);
+    public HttpEntity<ApiResponse> getOptions() {
+        ApiResponse apiResponse = optionService.getOptionList();
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @PutMapping
-    public HttpEntity<?> updateOption(@RequestBody OptionDto optionDto) {
+    public HttpEntity<ApiResponse> updateOption(@RequestBody OptionDto optionDto) {
         ApiResponse apiResponse = optionService.updateOption(optionDto);
-        return ResponseEntity.status(apiResponse.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteOption(@PathVariable Integer id) {
+    public HttpEntity<ApiResponse> deleteOption(@PathVariable Integer id) {
         ApiResponse apiResponse = optionService.deleteOption(id);
-        return ResponseEntity.status(apiResponse.isSuccess()? HttpStatus.OK :HttpStatus.BAD_REQUEST).body(apiResponse);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 }

@@ -15,10 +15,12 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer questionIndex;
+    @ManyToOne
+    private Question question;
 
-    @Column(nullable = false)
+    @ManyToOne
+    private Option option;
+
     private String answer;
 
     private boolean correct;
