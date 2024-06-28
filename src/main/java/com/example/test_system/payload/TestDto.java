@@ -1,5 +1,6 @@
 package com.example.test_system.payload;
 
+import com.example.test_system.entity.O_Question;
 import com.example.test_system.entity.QuestionList;
 import lombok.*;
 
@@ -20,6 +21,6 @@ public class TestDto {
     private Integer passingScore;
     private Integer subCategoryId;
     private Integer groupId;
-    private List<String> oQuestion;
+    private List<O_Question> oQuestion;
     private List<String> yQuestion;
 }
