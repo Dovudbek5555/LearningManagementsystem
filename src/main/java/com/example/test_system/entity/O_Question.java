@@ -21,9 +21,6 @@ public class O_Question {
     @Column(unique = true, nullable = false)
     private String question;
 
-    @OneToMany
-    private List<Option> optionList;
-
     @ManyToOne
     private SubCategory subCategory;
 
