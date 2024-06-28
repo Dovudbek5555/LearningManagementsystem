@@ -3,24 +3,24 @@ package com.example.test_system.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-public class Answer {
-
+public class Exam {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @ManyToOne
+    private Group group;
+    @ManyToOne
+    private Test test;
 
-    @Column(nullable = false)
-    private Integer questionIndex;
-
-    @Column(nullable = false)
-    private String answer;
-
-    private boolean correct;
+    private LocalDate startDate;
+    private LocalDate finishDate;
 
 }

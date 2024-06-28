@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +35,7 @@ public class TestService {
         Duration duration=Duration.ofMinutes(testDto.getDuration());
         Test test=Test.builder()
                 .questionList(questionList)
-                .startActiveDate(testDto.getStartActiveDate())
-                .finishActiveDate(testDto.getFinishActiveDate())
+                .createdAt(LocalDate.now())
                 .duration(duration)
                 .passingScore(testDto.getPassingScore())
                 .group(group)
@@ -50,14 +50,14 @@ public class TestService {
         List<String> yQuestions=new ArrayList<>();
         Test test = testRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Test not found"));
         for (O_Question oQuestion : test.getQuestionList().getOQuestions()) {
+
             oQuestions.add(oQuestion);
         }
         for (Y_Question yQuestion : test.getQuestionList().getYQuestions()) {
             yQuestions.add(yQuestion.getQuestion());
         }
         TestDto testDto=TestDto.builder()
-                .startActiveDate(test.getStartActiveDate())
-                .finishActiveDate(test.getFinishActiveDate())
+                .createdAt(test.getCreatedAt())
                 .passingScore(test.getPassingScore())
                 .duration((int) test.getDuration().toMinutes())
                 .oQuestion(oQuestions)
@@ -65,4 +65,28 @@ public class TestService {
                 .build();
         return new ApiResponse("Success",true,HttpStatus.OK,testDto);
     }
+    public ApiResponse getAllTests(){
+        List<Test> testList = testRepository.findAll();
+        List<TestDto> testDtoList=new ArrayList<>();
+        for (Test test : testList) {
+            TestDto testDto = TestDto.builder()
+                    .groupId(test.getGroup().getId())
+                    .createdAt(test.getCreatedAt())
+                    .passingScore(test.getPassingScore())
+                    .questionListId(test.getQuestionList().getId())
+                    .duration((int) test.getDuration().toMinutes())
+                    .build();
+            testDtoList.add(testDto);
+        }
+        return new ApiResponse("Success",true,HttpStatus.OK,testDtoList);
+    }
+
+
+
+    asdfghjkl;'ghjkl;
+    +a ghdvsv
+            b hgvjbjkj
+                    c gvhb
+                            d kgfhbl
+                                    string answer=a
 }
