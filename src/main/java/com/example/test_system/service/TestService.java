@@ -81,7 +81,25 @@ public class TestService {
         return new ApiResponse("Success",true,HttpStatus.OK,testDtoList);
     }
 
-//    public ApiResponse uodateTest(TestDto testDto){
-//
-//    }
+    public ApiResponse updateTest(TestDto testDto){
+        Group group = groupRepository.findById(testDto.getGroupId()).orElseThrow(() -> new ResourceAccessException("Group not found"));
+        SubCategory subCategory = subCategoryRepository.findById(testDto.getSubCategoryId()).orElseThrow(() -> new ResourceAccessException("SubCategory not found"));
+        QuestionList questionList = questionListRepository.findById(testDto.getQuestionListId()).orElseThrow(() -> new ResourceAccessException("QuestionList not found"));
+        Test test = testRepository.findById(testDto.getId()).orElseThrow(() -> new ResourceAccessException("Test not found"));
+        test.setId(testDto.getId());
+        test.setCreatedAt(testDto.getCreatedAt());
+        test.setPassingScore(testDto.getPassingScore());
+        test.setDuration(Duration.ofMinutes(testDto.getDuration()));
+        test.setGroup(group);
+        test.setSubCategory(subCategory);
+        test.setQuestionList(questionList);
+        testRepository.save(test);
+        return new ApiResponse("Success",true,HttpStatus.OK,test);
+    }
+
+    public ApiResponse deleteTest(Integer id){
+        Test test = testRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Test not found"));
+        testRepository.delete(test);
+        return new ApiResponse("Success",true,HttpStatus.OK,null);
+    }
 }
