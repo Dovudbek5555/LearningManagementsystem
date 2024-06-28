@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class ExamDto {
+    private Integer id;
     private Integer groupId;
     private Integer testId;
     private LocalDate startDate;
