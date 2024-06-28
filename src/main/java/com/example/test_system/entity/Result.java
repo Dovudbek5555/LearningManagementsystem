@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -19,19 +20,19 @@ public class Result {
 
 //    Current user b/n topiladi
     @ManyToOne
-    private User studentId;
+    private User student;
 
     @ManyToOne
-    private Test testId;
+    private Test test;
 
     @OneToMany
     private List<Answer> answer;
 
     @Column(nullable = false)
-    private Timestamp startTime;
+    private LocalTime startTime;
 
     @Column(nullable = false)
-    private Timestamp endTime;
+    private LocalTime endTime;
 
     private Boolean checked;
 }
