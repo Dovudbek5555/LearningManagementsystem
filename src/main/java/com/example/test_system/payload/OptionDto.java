@@ -18,4 +18,6 @@ public class OptionDto {
     private String description;
 
     private Boolean status;
+
+    private Integer questionId;
 }

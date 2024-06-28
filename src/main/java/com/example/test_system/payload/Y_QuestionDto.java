@@ -7,8 +7,14 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AnswerDto {
+public class
+Y_QuestionDto {
+
     private Integer id;
-    private Integer questionId;
-    private String answer;
+
+    private String question;
+
+    private Integer subCategoryId;
+
+    private String difficultyEnum;
 }
