@@ -3,6 +3,7 @@ package com.example.test_system.service;
 import com.example.test_system.entity.Exam;
 import com.example.test_system.entity.Group;
 import com.example.test_system.entity.Test;
+import com.example.test_system.exceptions.GenericException;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.ExamDto;
 import com.example.test_system.payload.TestDto;
@@ -24,8 +25,10 @@ public class ExamService {
     private final TestRepository testRepository;
     private final GroupRepository groupRepository;
     public ApiResponse saveExam(ExamDto examDto) {
-        Test test = testRepository.findById(examDto.getTestId()).orElseThrow(() -> new ResourceAccessException("Test not found"));
-        Group group = groupRepository.findById(examDto.getGroupId()).orElseThrow(() -> new ResourceAccessException("Group not found"));
+        Test test = testRepository.findById(examDto.getTestId())
+                .orElseThrow(() -> GenericException.builder().message("Test not found").build());
+        Group group = groupRepository.findById(examDto.getGroupId())
+                .orElseThrow(() -> GenericException.builder().message("Group not found").build());
         Exam exam = Exam.builder()
                 .test(test)
                 .group(group)
@@ -53,7 +56,8 @@ public class ExamService {
     }
 
     public ApiResponse getExamById(Integer id) {
-        Exam exam = examRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Exam not found"));
+        Exam exam = examRepository.findById(id)
+                .orElseThrow(() -> GenericException.builder().message("Exam not found").build());
         ExamDto examDto= ExamDto.builder()
                 .id(exam.getId())
                 .startDate(exam.getStartDate())
@@ -65,9 +69,12 @@ public class ExamService {
     }
 
     public ApiResponse updateExam(ExamDto examDto) {
-        Group group = groupRepository.findById(examDto.getGroupId()).orElseThrow(() -> new ResourceAccessException("Group not found"));
-        Test test = testRepository.findById(examDto.getTestId()).orElseThrow(() -> new ResourceAccessException("Test not found"));
-        Exam exam = examRepository.findById(examDto.getId()).orElseThrow(() -> new ResourceAccessException("Exam not found"));
+        Group group = groupRepository.findById(examDto.getGroupId())
+                .orElseThrow(() -> GenericException.builder().message("Group not found").build());
+        Test test = testRepository.findById(examDto.getTestId())
+                .orElseThrow(() -> GenericException.builder().message("Test not found").build());
+        Exam exam = examRepository.findById(examDto.getId())
+                .orElseThrow(() -> GenericException.builder().message("Exam not found").build());
         exam.setStartDate(examDto.getStartDate());
         exam.setFinishDate(examDto.getFinishDate());
         exam.setGroup(group);
@@ -78,7 +85,8 @@ public class ExamService {
     }
 
     public ApiResponse deleteExamById(Integer id) {
-        Exam exam = examRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Exam not found"));
+        Exam exam = examRepository.findById(id)
+                .orElseThrow(() -> GenericException.builder().message("Exam not found").build());
         examRepository.delete(exam);
         return new ApiResponse("Success",true, HttpStatus.OK,null);
     }
