@@ -46,11 +46,11 @@ public class TestService {
     }
 
     public ApiResponse getOneTest(Integer id) {
-        List<String> oQuestions=new ArrayList<>();
+        List<O_Question> oQuestions=new ArrayList<>();
         List<String> yQuestions=new ArrayList<>();
         Test test = testRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Test not found"));
         for (O_Question oQuestion : test.getQuestionList().getOQuestions()) {
-            oQuestions.add(oQuestion.getQuestion());
+            oQuestions.add(oQuestion);
         }
         for (Y_Question yQuestion : test.getQuestionList().getYQuestions()) {
             yQuestions.add(yQuestion.getQuestion());
