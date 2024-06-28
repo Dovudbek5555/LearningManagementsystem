@@ -2,6 +2,8 @@ package com.example.test_system.payload;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -11,5 +13,5 @@ public class GroupDto {
     private Integer id;
     private String name;
     private Integer categoryId;
-    private Integer teacherId;
+    private UUID teacherId;
 }

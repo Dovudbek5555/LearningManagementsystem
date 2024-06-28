@@ -28,15 +28,12 @@ public class TestService {
                 .orElseThrow(() -> new ResourceAccessException("Question not found"));
         SubCategory subCategory = subCategoryRepository.findById(testDto.getSubCategoryId())
                 .orElseThrow(() -> new ResourceAccessException("SubCategory not found"));
-        Group group = groupRepository.findById(testDto.getGroupId())
-                .orElseThrow(() -> new ResourceAccessException("Group not found"));
         Duration duration=Duration.ofMinutes(testDto.getDuration());
         Test test=Test.builder()
                 .questionList(List.of(questionList))
                 .createdAt(LocalDate.now())
                 .duration(duration)
                 .passingScore(testDto.getPassingScore())
-                .group(group)
                 .subCategory(subCategory)
                 .build();
         testRepository.save(test);
@@ -66,7 +63,6 @@ public class TestService {
                         .groupId(test.getGroup().getId())
                         .createdAt(test.getCreatedAt())
                         .passingScore(test.getPassingScore())
-//                    .questionListId(test.getQuestionList().getId())
                         .duration((int) test.getDuration().toMinutes())
                         .questionId(question.getId())
                         .build();
@@ -78,8 +74,6 @@ public class TestService {
     }
 
     public ApiResponse updateTest(TestDto testDto){
-        Group group = groupRepository.findById(testDto.getGroupId())
-                .orElseThrow(() -> new ResourceAccessException("Group not found"));
         SubCategory subCategory = subCategoryRepository.findById(testDto.getSubCategoryId())
                 .orElseThrow(() -> new ResourceAccessException("SubCategory not found"));
         Question questionList =questionRepository.findById(testDto.getQuestionId())
@@ -89,7 +83,6 @@ public class TestService {
         test.setId(testDto.getId());
         test.setPassingScore(testDto.getPassingScore());
         test.setDuration(Duration.ofMinutes(testDto.getDuration()));
-        test.setGroup(group);
         test.setSubCategory(subCategory);
         test.setQuestionList(List.of(questionList));
         testRepository.save(test);
