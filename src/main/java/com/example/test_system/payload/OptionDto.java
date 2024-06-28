@@ -1,8 +1,6 @@
 package com.example.test_system.payload;
 
-import jakarta.persistence.*;
 import lombok.*;
-import com.example.test_system.entity.enums.OptionEnum;
 
 @Getter
 @Setter
