@@ -33,6 +33,4 @@ public class Test {
     @ManyToOne
     private SubCategory subCategory;
 
-    @ManyToOne
-    private Group group;
 }

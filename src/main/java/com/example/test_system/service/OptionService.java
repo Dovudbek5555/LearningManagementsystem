@@ -25,16 +25,15 @@ public class OptionService {
 
     public ApiResponse saveOption(OptionDto optionDto) {
         boolean exists = optionRepository.existsByOptionEnum(optionDto.getOptionEnum());
-        Question oQuestion = QuestionRepository.findById(optionDto.getQuestionId()).orElseThrow(() -> GenericException.builder()
+        Question question = QuestionRepository.findById(optionDto.getQuestionId()).orElseThrow(() -> GenericException.builder()
                 .message("Question not fond")
                 .statusCode(400)
                 .build());
         if (!exists) {
             Option option = Option.builder()
-                    .optionEnum(OptionEnum.valueOf(optionDto.getOptionEnum()))
                     .description(optionDto.getDescription())
                     .status(optionDto.getStatus())
-                    .oQuestion(oQuestion)
+                    .Question(question)
                     .build();
             optionRepository.save(option);
             return new ApiResponse("Option successfully saved", true, HttpStatus.OK, null);
@@ -48,10 +47,9 @@ public class OptionService {
         for (Option option : optionRepository.findAll()) {
             OptionDto optionDto = OptionDto.builder()
                     .id(option.getId())
-                    .optionEnum(String.valueOf(option.getOptionEnum()))
                     .description(option.getDescription())
                     .status(option.getStatus())
-                    .questionId(option.getOQuestion().getId())
+                    .questionId(option.getQuestion().getId())
                     .build();
             optionDtos.add(optionDto);
         }
@@ -66,10 +64,9 @@ public class OptionService {
                 .statusCode(400)
                 .build());
         option.setId(option.getId());
-        option.setOptionEnum(OptionEnum.valueOf(optionDto.getOptionEnum()));
         option.setDescription(option.getDescription());
         option.setStatus(optionDto.getStatus());
-        option.setOQuestion(oQuestion);
+        option.setQuestion(oQuestion);
         optionRepository.save(option);
         return new ApiResponse("Option successfully updated", true, HttpStatus.OK, null);
     }

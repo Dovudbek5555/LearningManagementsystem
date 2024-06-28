@@ -21,17 +21,17 @@ public class OptionController {
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @GetMapping
-    public HttpEntity<?> getOptions() {
+    public HttpEntity<ApiResponse> getOptions() {
         ApiResponse apiResponse = optionService.getOptionList();
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @PutMapping
-    public HttpEntity<?> updateOption(@RequestBody OptionDto optionDto) {
+    public HttpEntity<ApiResponse> updateOption(@RequestBody OptionDto optionDto) {
         ApiResponse apiResponse = optionService.updateOption(optionDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteOption(@PathVariable Integer id) {
+    public HttpEntity<ApiResponse> deleteOption(@PathVariable Integer id) {
         ApiResponse apiResponse = optionService.deleteOption(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
