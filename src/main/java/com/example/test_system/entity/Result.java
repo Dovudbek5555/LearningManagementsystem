@@ -34,5 +34,9 @@ public class Result {
     @Column(nullable = false)
     private LocalTime endTime;
 
+    private Integer correctCount;
+
+    private Boolean passed;
+
     private Boolean checked;
 }

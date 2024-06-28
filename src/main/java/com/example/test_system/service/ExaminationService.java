@@ -2,10 +2,10 @@ package com.example.test_system.service;
 
 import com.example.test_system.entity.*;
 import com.example.test_system.exceptions.GenericException;
+import com.example.test_system.payload.AnswerDto;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.ResultDto;
 import com.example.test_system.repository.ExamRepository;
-import com.example.test_system.repository.GroupRepository;
 import com.example.test_system.repository.ResultRepository;
 import com.example.test_system.repository.TestRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +56,13 @@ public class ExaminationService {
         ("Your group not allowed for this test", false, HttpStatus.METHOD_NOT_ALLOWED, null);
     }
 
+    public ApiResponse passResult(Integer resultId, List<AnswerDto>answerDtos){
+        Result result = resultRepository.findById(resultId).orElseThrow(() -> GenericException.builder()
+                .message("Result not found").statusCode(404).build());
+        for (AnswerDto answerDto : answerDtos) {
 
+        }
+    }
 
     public boolean isExamAvailable(Integer examId) {
         return examRepository.findById(examId)
