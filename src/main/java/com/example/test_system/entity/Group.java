@@ -26,6 +26,4 @@ public class Group {
     @ManyToOne
     private User teacherId;
 
-    @OneToMany
-    private List<User> students;
 }

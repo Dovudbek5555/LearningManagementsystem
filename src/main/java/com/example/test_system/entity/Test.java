@@ -20,9 +20,8 @@ public class Test {
     @ManyToOne
     private QuestionList questionList;
 
-    private LocalDate startActiveDate;
+    private LocalDate createdAt;
 
-    private LocalDate finishActiveDate;
 
     //integer da minut kiritiladi keyin Duration.minutOf(integer)
     private Duration duration;

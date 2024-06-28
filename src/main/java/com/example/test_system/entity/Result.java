@@ -17,6 +17,7 @@ public class Result {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+//    Current user b/n topiladi
     @ManyToOne
     private User studentId;
 

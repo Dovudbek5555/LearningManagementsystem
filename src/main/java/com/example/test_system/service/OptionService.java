@@ -25,7 +25,7 @@ public class OptionService {
             Option option= Option.builder()
                     .optionEnum(OptionEnum.valueOf(optionDto.getOptionEnum()))
                     .description(optionDto.getDescription())
-                    .status(optionDto.getStatus())
+                     .status(optionDto.getStatus())
                     .build();
             optionRepository.save(option);
             return new ApiResponse("Option successfully saved",true, HttpStatus.OK, null);

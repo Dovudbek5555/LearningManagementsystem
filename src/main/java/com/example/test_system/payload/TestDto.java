@@ -15,8 +15,7 @@ import java.util.List;
 public class TestDto {
     private Integer id;
     private Integer questionListId;
-    private LocalDate startActiveDate;
-    private LocalDate finishActiveDate;
+    private LocalDate createdAt;
     private Integer duration;
     private Integer passingScore;
     private Integer subCategoryId;
