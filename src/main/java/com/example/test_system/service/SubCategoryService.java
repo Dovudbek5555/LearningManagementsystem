@@ -43,6 +43,7 @@ public class SubCategoryService {
         List<SubCategoryDto> subCategoryDtos=new ArrayList<>();
         for (SubCategory subCategory : subCategoryList) {
             SubCategoryDto subCategoryDto1= SubCategoryDto.builder()
+                    .id(subCategory.getId())
                     .name(subCategory.getName())
                     .categoryId(subCategory.getCategory().getId())
                     .build();
