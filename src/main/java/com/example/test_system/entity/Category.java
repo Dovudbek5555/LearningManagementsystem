@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Category {
+public class   Category {
     @Id
     @GeneratedValue
     private Integer id;

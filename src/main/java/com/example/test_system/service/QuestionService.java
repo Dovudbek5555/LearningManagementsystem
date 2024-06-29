@@ -46,7 +46,7 @@ public class QuestionService {
                     .id(question.getId())
                     .question(question.getQuestion())
                     .subCategoryId(question.getSubCategory().getId())
-                    .difficultyEnum(question.getQuestion())
+                    .difficultyEnum(String.valueOf(question.getDifficulty()))
                     .build();
             questionDtos.add(questionDto);
         }
