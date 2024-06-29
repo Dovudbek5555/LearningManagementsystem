@@ -23,8 +23,8 @@ public class QuestionController {
     }
 
     @GetMapping
-    public HttpEntity<ApiResponse> getAllQuestions(@CurrentUser User user) {
-        ApiResponse questionList = questionService.getQuestionList(user);
+    public HttpEntity<ApiResponse> getAllQuestions() {
+        ApiResponse questionList = questionService.getQuestionList();
         return ResponseEntity.status(questionList.getHttpStatus()).body(questionList);
     }
     @PutMapping
