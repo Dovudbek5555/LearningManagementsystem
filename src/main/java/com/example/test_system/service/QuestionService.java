@@ -45,21 +45,21 @@ public class QuestionService {
         List<QuestionDto> questionDtos = new ArrayList<>();
         for (Question question : questionRepository.findAll()) {
             if (user.getRoleEnum()== RoleEnum.TEACHER|| user.getRoleEnum()== RoleEnum.ADMIN){
-                QuestionDto questionDto = QuestionDto.builder()
+                QuestionDto questionDto1 = QuestionDto.builder()
                         .id(question.getId())
                         .question(question.getQuestion())
                         .subCategoryId(question.getSubCategory().getId())
                         .difficultyEnum(question.getQuestion())
                         .build();
+                questionDtos.add(questionDto1);
+            }else {
+                QuestionDto questionDto = QuestionDto.builder()
+                        .id(question.getId())
+                        .question(question.getQuestion())
+                        .subCategoryId(question.getSubCategory().getId())
+                        .build();
                 questionDtos.add(questionDto);
             }
-            QuestionDto questionDto = QuestionDto.builder()
-                    .id(question.getId())
-                    .question(question.getQuestion())
-                    .subCategoryId(question.getSubCategory().getId())
-                    .build();
-            questionDtos.add(questionDto);
-
         }
         return new ApiResponse("Success", true, HttpStatus.OK, questionDtos);
     }
