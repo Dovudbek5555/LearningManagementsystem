@@ -132,6 +132,6 @@ public class UserService {
     public ApiResponse deleteUser(UUID id){
         User user = userRepository.findById(id).orElseThrow(() -> GenericException.builder().message("User not found").statusCode(400).build());
         userRepository.delete(user);
-        return new ApiResponse("Success",true, HttpStatus.OK,null);
+            return new ApiResponse("Success",true, HttpStatus.OK,null);
     }
 }
