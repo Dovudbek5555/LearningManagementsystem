@@ -25,6 +25,7 @@ public class ExaminationService {
     private final ResultRepository resultRepository;
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
+    private final UserRepository userRepository;
 
     public ApiResponse startTest(Integer id, User user) {
         Exam exam = fetchExam(id);
@@ -56,7 +57,15 @@ public class ExaminationService {
     }
 
     private boolean isUserInGroup(Exam exam, User user) {
-        return exam.getGroup().getId().equals(user.getGroup().getId());
+        if (user.getGroups().isEmpty()){
+            return false;
+        }
+        for (Group group : user.getGroups()) {
+            if (exam.getGroup().getId().equals(group.getId())){
+                return true;
+            }
+        }
+        return false;
     }
 
     private Result createResult(User user, Test test) {
@@ -85,10 +94,8 @@ public class ExaminationService {
                 .orElse(false);
     }
 
-//----------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------------------------
 
+    //  SUBMIT RESULT
     public ApiResponse passResult(Integer resultId, List<AnswerDto> answerDtos) {
         Result result = fetchResult(resultId);
         int correctCount = 0;

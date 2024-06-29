@@ -29,18 +29,14 @@ public class QuestionService {
                 .message("Question not fond")
                 .statusCode(400)
                 .build());
-        boolean exists = questionRepository.existsByDifficulty(questionDto.getQuestion());
-        if (!exists){
-            Question question = Question.builder()
-                    .question(questionDto.getQuestion())
-                    .subCategory(subCategory)
-                    .difficulty(DifficultyEnum.valueOf(questionDto.getDifficultyEnum()))
-                    .build();
-            questionRepository.save(question);
-            return new ApiResponse("Question successfully saved", true, HttpStatus.OK, null);
-        }
-        return new ApiResponse("DifficultyEnum not found", false, HttpStatus.BAD_REQUEST, null);
-    }
+        Question question = Question.builder()
+                .question(questionDto.getQuestion())
+                .subCategory(subCategory)
+                .difficulty(DifficultyEnum.valueOf(questionDto.getDifficultyEnum()))
+                .build();
+        questionRepository.save(question);
+        return new ApiResponse("Question successfully saved", true, HttpStatus.OK, null);
+}
 
     public ApiResponse getQuestionList(Integer page, Integer size){
         PageRequest pageRequest = PageRequest.of(page, size);
