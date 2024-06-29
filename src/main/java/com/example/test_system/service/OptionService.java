@@ -31,7 +31,7 @@ public class OptionService {
         Option option = Option.builder()
                 .description(optionDto.getDescription())
                 .status(optionDto.getStatus())
-                .Question(question)
+                .question(question)
                 .build();
         optionRepository.save(option);
         return new ApiResponse("Option successfully saved", true, HttpStatus.OK, null);
