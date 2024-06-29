@@ -29,7 +29,8 @@ public class ExaminationController {
 
     @PostMapping("/pass-test/{id}")
     public HttpEntity<ApiResponse> passResult(@PathVariable Integer id, @RequestBody List<AnswerDto> answerDtos){
-        return null;
+        ApiResponse apiResponse = examinationService.passResult(id, answerDtos);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
 }

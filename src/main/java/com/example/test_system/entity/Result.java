@@ -3,7 +3,6 @@ package com.example.test_system.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -33,6 +32,10 @@ public class Result {
 
     @Column(nullable = false)
     private LocalTime endTime;
+
+    private Integer correctCount;
+
+    private Boolean passed;
 
     private Boolean checked;
 }
