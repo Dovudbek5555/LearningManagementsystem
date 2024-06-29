@@ -26,7 +26,7 @@ public class QuestionService {
                 .message("Question not fond")
                 .statusCode(400)
                 .build());
-        boolean exists = questionRepository.existsByDifficulty(questionDto.getQuestion());
+        boolean exists = questionRepository.existsByQuestion(questionDto.getQuestion());
         if (!exists){
             Question question = Question.builder()
                     .question(questionDto.getQuestion())
