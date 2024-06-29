@@ -23,7 +23,8 @@ public class OptionService {
     private final OptionRepository optionRepository;
 
     public ApiResponse saveOption(OptionDto optionDto) {
-        boolean exists = optionRepository.existsByOptionEnum(optionDto.getOptionEnum());
+        boolean exists = optionRepository.
+                existsByOptionEnum(optionDto.getOptionEnum());
         Question question = QuestionRepository.findById(optionDto.getQuestionId()).orElseThrow(() -> GenericException.builder()
                 .message("Question not fond")
                 .statusCode(400)

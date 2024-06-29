@@ -3,6 +3,7 @@ package com.example.test_system.payload;
 import lombok.*;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class UserDto {
-    private Integer id;
+    private UUID id;
     private String firstname;
     private String lastname;
     private String phoneNumber;

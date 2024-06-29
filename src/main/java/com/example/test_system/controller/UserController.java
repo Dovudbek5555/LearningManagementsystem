@@ -8,10 +8,9 @@ import com.example.test_system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -21,6 +20,28 @@ public class UserController {
     @PostMapping
     public HttpEntity<ApiResponse> saveUser(@RequestBody UserDto userDto, @CurrentUser User user){
         ApiResponse apiResponse = userService.saveUser(userDto, user);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+    @GetMapping
+    public HttpEntity<ApiResponse> getUserList(){
+        ApiResponse allUsers = userService.getAllUsers();
+        return ResponseEntity.status(allUsers.getHttpStatus()).body(allUsers);
+    }
+    @GetMapping("/{id}")
+    public HttpEntity<ApiResponse> getUserById(@PathVariable UUID id){
+        ApiResponse user = userService.getOneUser(id);
+        return ResponseEntity.status(user.getHttpStatus()).body(user);
+    }
+
+    @PutMapping
+    public HttpEntity<ApiResponse> updateUser(@RequestBody UserDto userDto){
+        ApiResponse apiResponse = userService.updateUser(userDto);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public HttpEntity<ApiResponse> deleteUser(@PathVariable UUID id){
+        ApiResponse apiResponse = userService.deleteUser(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 }
