@@ -19,6 +19,9 @@ public class Answer {
     private Question question;
 
     @ManyToOne
+    private User student;
+
+    @ManyToOne
     private Option option;
 
     private String answer;
