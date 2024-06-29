@@ -1,6 +1,7 @@
 package com.example.test_system.service;
 
 import com.example.test_system.entity.*;
+import com.example.test_system.exceptions.GenericException;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.TestDto;
 import com.example.test_system.repository.*;
@@ -24,10 +25,13 @@ public class TestService {
     private final GroupRepository groupRepository;
 
     public ApiResponse saveTest(TestDto testDto) {
-        Question questionList =questionRepository.findById(testDto.getQuestionId())
-                .orElseThrow(() -> new ResourceAccessException("Question not found"));
+        Question questionList = questionRepository.findById(testDto.getQuestionId())
+                .orElseThrow(() -> GenericException.builder()
+                        .message("Question not found")
+                        .statusCode(400)
+                        .build());
         SubCategory subCategory = subCategoryRepository.findById(testDto.getSubCategoryId())
-                .orElseThrow(() -> new ResourceAccessException("SubCategory not found"));
+                .orElseThrow(() -> GenericException.builder().message("subCategory not found").statusCode(400).build());
         Duration duration=Duration.ofMinutes(testDto.getDuration());
         Test test=Test.builder()
                 .questionList(List.of(questionList))
@@ -42,7 +46,8 @@ public class TestService {
 
     public ApiResponse getOneTest(Integer id) {
         List<Question> oQuestions=new ArrayList<>();
-        Test test = testRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Test not found"));
+        Test test = testRepository.findById(id)
+                .orElseThrow(() -> GenericException.builder().message("Test not found").statusCode(400).build());
         for (Question question : test.getQuestionList()) {
             oQuestions.add(question);
         }
@@ -60,7 +65,6 @@ public class TestService {
         for (Test test : testList) {
             for (Question question : test.getQuestionList()) {
                 TestDto testDto = TestDto.builder()
-                        .groupId(test.getGroup().getId())
                         .createdAt(test.getCreatedAt())
                         .passingScore(test.getPassingScore())
                         .duration((int) test.getDuration().toMinutes())
@@ -75,11 +79,11 @@ public class TestService {
 
     public ApiResponse updateTest(TestDto testDto){
         SubCategory subCategory = subCategoryRepository.findById(testDto.getSubCategoryId())
-                .orElseThrow(() -> new ResourceAccessException("SubCategory not found"));
+                .orElseThrow(() -> GenericException.builder().message("SubCategory not found").statusCode(400).build());
         Question questionList =questionRepository.findById(testDto.getQuestionId())
-                .orElseThrow(() -> new ResourceAccessException("Question not found"));
+                .orElseThrow(() -> GenericException.builder().message("Question not found").statusCode(400).build());
         Test test = testRepository.findById(testDto.getId())
-                .orElseThrow(() -> new ResourceAccessException("Test not found"));
+                .orElseThrow(() -> GenericException.builder().message("Test not found").statusCode(400).build());
         test.setId(testDto.getId());
         test.setPassingScore(testDto.getPassingScore());
         test.setDuration(Duration.ofMinutes(testDto.getDuration()));
@@ -90,7 +94,8 @@ public class TestService {
     }
 
     public ApiResponse deleteTest(Integer id){
-        Test test = testRepository.findById(id).orElseThrow(() -> new ResourceAccessException("Test not found"));
+        Test test = testRepository.findById(id)
+                .orElseThrow(() -> GenericException.builder().message("Test not found").statusCode(400).build());
         testRepository.delete(test);
         return new ApiResponse("Success",true,HttpStatus.OK,null);
     }

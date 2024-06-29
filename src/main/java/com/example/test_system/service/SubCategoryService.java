@@ -2,6 +2,7 @@ package com.example.test_system.service;
 
 import com.example.test_system.entity.Category;
 import com.example.test_system.entity.SubCategory;
+import com.example.test_system.exceptions.GenericException;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.SubCategoryDto;
 import com.example.test_system.payload.TestDto;
@@ -24,7 +25,9 @@ public class SubCategoryService {
     public ApiResponse saveSubCategory(SubCategoryDto subCategoryDto) {
         boolean exists = subCategoryRepository.existsByName(subCategoryDto.getName());
         if (!exists) {
-            Category category = categoryRepository.findById(subCategoryDto.getCategoryId()).orElseThrow(() -> new ResourceAccessException("Category not found"));
+            Category category = categoryRepository.findById(subCategoryDto.getCategoryId())
+                    .orElseThrow(() -> GenericException.builder()
+                            .message("Category not found").statusCode(400).build());
             SubCategory subCategory1 = SubCategory.builder()
                     .name(subCategoryDto.getName())
                     .category(category)
@@ -49,7 +52,9 @@ public class SubCategoryService {
     }
 
     public ApiResponse getOneSubCategory(Integer id) {
-        SubCategory subCategory = subCategoryRepository.findById(id).orElseThrow(() -> new ResourceAccessException("SubCategory not found"));
+        SubCategory subCategory = subCategoryRepository.findById(id)
+                .orElseThrow(() -> GenericException.builder()
+                        .message("SubCategory not found").statusCode(400).build());
         SubCategoryDto subCategoryDto= SubCategoryDto.builder()
                 .id(subCategory.getId())
                 .name(subCategory.getName())
@@ -61,8 +66,12 @@ public class SubCategoryService {
     public ApiResponse updateSubCategory(SubCategoryDto subCategoryDto) {
         boolean exists = subCategoryRepository.existsByName(subCategoryDto.getName());
         if (!exists) {
-            Category category = categoryRepository.findById(subCategoryDto.getCategoryId()).orElseThrow(() -> new ResourceAccessException("Category not found"));
-            SubCategory subCategory = subCategoryRepository.findById(subCategoryDto.getId()).orElseThrow(() -> new ResourceAccessException("SubCategory not found"));
+            Category category = categoryRepository.findById(subCategoryDto.getCategoryId())
+                    .orElseThrow(() -> GenericException.builder()
+                            .message("Category not found").statusCode(400).build());
+            SubCategory subCategory = subCategoryRepository.findById(subCategoryDto.getId())
+                    .orElseThrow(() -> GenericException.builder()
+                            .message("SubCategory not found").statusCode(400).build());
             subCategory.setId(subCategoryDto.getId());
             subCategory.setName(subCategoryDto.getName());
             subCategory.setCategory(category);
@@ -73,7 +82,9 @@ public class SubCategoryService {
     }
 
     public ApiResponse deleteSubCategory(Integer id){
-        SubCategory subCategory = subCategoryRepository.findById(id).orElseThrow(() -> new ResourceAccessException("SubCategory not found"));
+        SubCategory subCategory = subCategoryRepository.findById(id)
+                .orElseThrow(() -> GenericException.builder()
+                        .message("SubCategory not found").statusCode(400).build());
         subCategoryRepository.delete(subCategory);
         return new ApiResponse("Success", true, HttpStatus.OK, null);
     }
