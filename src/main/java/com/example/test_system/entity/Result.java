@@ -3,7 +3,6 @@ package com.example.test_system.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.util.List;
 

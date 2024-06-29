@@ -20,5 +20,5 @@ public class Option {
     private Boolean status;
 
     @ManyToOne
-    private Question Question;
+    private Question question;
 }

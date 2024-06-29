@@ -23,21 +23,18 @@ public class OptionService {
     private final OptionRepository optionRepository;
 
     public ApiResponse saveOption(OptionDto optionDto) {
-        boolean exists = optionRepository.existsByOptionEnum(optionDto.getOptionEnum());
-        Question question = QuestionRepository.findById(optionDto.getQuestionId()).orElseThrow(() -> GenericException.builder()
+        Question question = QuestionRepository.findById(optionDto.getQuestionId()).orElseThrow(() -> GenericException
+                .builder()
                 .message("Question not fond")
                 .statusCode(400)
                 .build());
-        if (!exists) {
-            Option option = Option.builder()
-                    .description(optionDto.getDescription())
-                    .status(optionDto.getStatus())
-                    .Question(question)
-                    .build();
-            optionRepository.save(option);
-            return new ApiResponse("Option successfully saved", true, HttpStatus.OK, null);
-        }
-        return new ApiResponse("OptionEnum already exists", false, HttpStatus.BAD_REQUEST, null);
+        Option option = Option.builder()
+                .description(optionDto.getDescription())
+                .status(optionDto.getStatus())
+                .Question(question)
+                .build();
+        optionRepository.save(option);
+        return new ApiResponse("Option successfully saved", true, HttpStatus.OK, null);
     }
 
 
