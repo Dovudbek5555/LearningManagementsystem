@@ -73,4 +73,9 @@ public class QuestionService {
         questionRepository.delete(question);
         return new ApiResponse("Question successfully deleted", true, HttpStatus.OK, null);
     }
+
+    public ApiResponse filterQuestionByDifficulty(String difficulty){
+        List<Question> allByDifficulty = questionRepository.findAllByDifficulty(difficulty);
+        return new ApiResponse("Success", true,HttpStatus.OK,allByDifficulty);
+    }
 }

@@ -38,4 +38,10 @@ public class QuestionController {
         ApiResponse apiResponse = questionService.deleteQuestion(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+
+    @PostMapping("/{difficulty}")
+    public HttpEntity<ApiResponse> filterQuestionByDifficulty(@PathVariable String difficulty) {
+        ApiResponse apiResponse = questionService.filterQuestionByDifficulty(difficulty);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
 }
