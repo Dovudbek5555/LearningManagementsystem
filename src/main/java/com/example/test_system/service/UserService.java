@@ -35,7 +35,34 @@ public class UserService {
             Address address = addressRepository.findById(userDto.getAddressId())
                     .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
             if (user.getRoleEnum()==RoleEnum.TEACHER) {
-                User user1 = User.builder()
+
+                    User user1 = User.builder()
+                            .firstname(userDto.getFirstname())
+                            .lastname(userDto.getLastname())
+                            .phoneNumber(userDto.getPhoneNumber())
+                            .address(address)
+                            .group(group)
+                            .birthDate(userDto.getBirthDate())
+                            .roleEnum(RoleEnum.STUDENT)
+                            .password(passwordEncoder.encode(userDto.getPassword()))
+                            .build();
+                    userRepository.save(user1);
+                return new ApiResponse("Success",true, HttpStatus.OK,null);
+            } else if (user.getRoleEnum() == RoleEnum.ADMIN) {
+//                if (userDto.getRoleEnum().toUpperCase()=="TEACHER"){
+//                    User user2 = User.builder()
+//                        .firstname(userDto.getFirstname())
+//                        .lastname(userDto.getLastname())
+//                        .phoneNumber(userDto.getPhoneNumber())
+//                        .address(address)
+//                        .birthDate(userDto.getBirthDate())
+//                        .roleEnum(RoleEnum.valueOf(userDto.getRoleEnum().toUpperCase()))
+//                        .password(passwordEncoder.encode(userDto.getPassword()))
+//                        .build();
+//                    userRepository.save(user2);
+//                    return new ApiResponse("Success", true, HttpStatus.OK, null);
+//                }
+                User user3 = User.builder()
                         .firstname(userDto.getFirstname())
                         .lastname(userDto.getLastname())
                         .phoneNumber(userDto.getPhoneNumber())
@@ -45,22 +72,7 @@ public class UserService {
                         .roleEnum(RoleEnum.STUDENT)
                         .password(passwordEncoder.encode(userDto.getPassword()))
                         .build();
-                userRepository.save(user1);
-                return new ApiResponse("Success",true, HttpStatus.OK,null);
-            } else if (user.getRoleEnum() == RoleEnum.ADMIN) {
-                User user2 = User.builder()
-                        .firstname(userDto.getFirstname())
-                        .lastname(userDto.getLastname())
-                        .phoneNumber(userDto.getPhoneNumber())
-                        .address(address)
-                        .group(group)
-                        .birthDate(userDto.getBirthDate())
-                        .roleEnum(RoleEnum.valueOf(userDto.getRoleEnum().toUpperCase()))
-                        .password(passwordEncoder.encode(userDto.getPassword()))
-                        .build();
-
-                userRepository.save(user2);
-                return new ApiResponse("Success",true, HttpStatus.OK,null);
+                userRepository.save(user3);
             }
         }
         return new ApiResponse("Failed",false, HttpStatus.CONFLICT,null);
@@ -106,7 +118,6 @@ public class UserService {
                 .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> GenericException.builder().message("User not found").statusCode(400).build());
-//        if (passwordEncoder.matches(userDto.getPassword(),user.getPassword())){
             user.setFirstname(userDto.getFirstname());
             user.setLastname(userDto.getLastname());
             user.setPhoneNumber(userDto.getPhoneNumber());
@@ -116,8 +127,6 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             userRepository.save(user);
             return new ApiResponse("Success",true, HttpStatus.OK,null);
-//        }
-//        return new ApiResponse("Password not matches",false, HttpStatus.CONFLICT,null);
     }
 
     public ApiResponse deleteUser(UUID id){
