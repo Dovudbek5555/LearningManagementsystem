@@ -10,5 +10,5 @@ import java.util.List;
 
 @RepositoryRestResource(collectionResourceRel = "option", path = "list")
 public interface OptionRepository extends JpaRepository<Option, Integer> {
-    boolean existsByOptionEnum(String optionEnum);
+//    boolean existsByOptionEnum(String optionEnum);
 }
