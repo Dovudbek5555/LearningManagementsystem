@@ -89,4 +89,9 @@ public class SubCategoryService {
         subCategoryRepository.delete(subCategory);
         return new ApiResponse("Success", true, HttpStatus.OK, null);
     }
+
+    public ApiResponse findAllByCategory(Integer categoryId){
+        List<SubCategory> allByCategoryId = subCategoryRepository.findAllByCategory_Id(categoryId);
+        return new ApiResponse("Success", true, HttpStatus.OK, allByCategoryId);
+    }
 }

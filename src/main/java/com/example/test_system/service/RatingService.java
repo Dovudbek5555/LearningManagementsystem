@@ -2,11 +2,14 @@ package com.example.test_system.service;
 
 import com.example.test_system.entity.Exam;
 import com.example.test_system.entity.Result;
+import com.example.test_system.entity.User;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.RatingBySumCorrectCount;
 import com.example.test_system.payload.ResultDto;
 import com.example.test_system.repository.ExamRepository;
+import com.example.test_system.repository.GroupRepository;
 import com.example.test_system.repository.ResultRepository;
+import com.example.test_system.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,8 @@ public class RatingService {
 
     private final ResultRepository resultRepository;
     private final ExamRepository examRepository;
+    private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
 
     public ApiResponse getTopStudentsByExam(Integer examId) {
         List<Result> results = resultRepository.findAllByExam_IdOrderByCorrectCountDesc(examId);
@@ -54,4 +59,9 @@ public class RatingService {
 
 
 
+    public ApiResponse getTopStudentsByGroup(Integer groupId){
+        List<User> allByGroupId = userRepository.findAllByGroup_Id(groupId);
+        List<RatingBySumCorrectCount> studentCorrectCountsByGroups = resultRepository.findStudentCorrectCountsByGroups(allByGroupId);
+        return new ApiResponse("Top students retrieved successfully", true, HttpStatus.OK, studentCorrectCountsByGroups);
+    }
 }

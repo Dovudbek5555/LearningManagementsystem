@@ -22,4 +22,14 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
             "GROUP BY r.student " +
             "ORDER BY SUM(r.correctCount) DESC")
     List<RatingBySumCorrectCount> findStudentCorrectCountsByExams(@Param("exams") List<Exam> exams);
+
+
+    @Query("SELECT RatingBySumCorrectCount(r.student, SUM(r.correctCount)) " +
+            "FROM Result r " +
+            "WHERE r.student IN :users " +
+            "GROUP BY r.student " +
+            "ORDER BY SUM(r.correctCount) DESC")
+    List<RatingBySumCorrectCount> findStudentCorrectCountsByGroups(@Param("user") List<User> users);
+
+
 }
