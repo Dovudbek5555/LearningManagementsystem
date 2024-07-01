@@ -22,11 +22,13 @@ public class ResultDto {
     //    Current user b/n topiladi
     private UUID studentId;
 
-    private Integer testId;
+    private Integer examId;
 
     private LocalTime startTime;
 
     private LocalTime endTime;
+
+    private Integer correctCount;
 
     private Boolean checked;
 
