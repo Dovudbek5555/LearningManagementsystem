@@ -2,6 +2,7 @@ package com.example.test_system.payload;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -14,4 +15,5 @@ public class GroupDto {
     private String name;
     private Integer categoryId;
     private UUID teacherId;
+    private LocalDate createdAt;
 }

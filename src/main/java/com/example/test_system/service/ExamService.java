@@ -10,11 +10,13 @@ import com.example.test_system.payload.TestDto;
 import com.example.test_system.repository.ExamRepository;
 import com.example.test_system.repository.GroupRepository;
 import com.example.test_system.repository.TestRepository;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,5 +91,12 @@ public class ExamService {
                 .orElseThrow(() -> GenericException.builder().message("Exam not found").build());
         examRepository.delete(exam);
         return new ApiResponse("Success",true, HttpStatus.OK,null);
+    }
+
+    public ApiResponse getExamsByLastWeek(){
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.minusDays(6);
+        Integer i = examRepository.countByCreatedAtAfter(startDate);
+        return new ApiResponse("Exams created in last week",true, HttpStatus.OK, i);
     }
 }

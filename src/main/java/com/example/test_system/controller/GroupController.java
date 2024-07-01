@@ -1,6 +1,7 @@
 package com.example.test_system.controller;
 
 import com.example.test_system.entity.User;
+import com.example.test_system.entity.enums.RoleEnum;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.GroupDto;
 import com.example.test_system.security.CurrentUser;
@@ -58,4 +59,13 @@ public class GroupController {
         ApiResponse groupByCategory = groupService.findGroupByCategory(categoryId);
         return ResponseEntity.status(groupByCategory.getHttpStatus()).body(groupByCategory);
     }
+
+    @GetMapping("/groups/by-last-week")
+    public HttpEntity<ApiResponse> getByLastWeek(){
+        ApiResponse apiResponse = groupService.findGroupByLastWeek();
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+
+
+
 }

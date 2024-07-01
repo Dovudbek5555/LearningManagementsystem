@@ -26,7 +26,7 @@ public class Group {
     private Category category;
 
     @ManyToOne
-    private User teacherId;
+    private User teacher;
 
     @CreatedDate
     private LocalDate createdAt;

@@ -1,6 +1,7 @@
 package com.example.test_system.controller;
 
 import com.example.test_system.entity.User;
+import com.example.test_system.entity.enums.RoleEnum;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.UserDto;
 import com.example.test_system.security.CurrentUser;
@@ -44,4 +45,11 @@ public class UserController {
         ApiResponse apiResponse = userService.deleteUser(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+
+    @GetMapping("/users/by-last-week")
+    public HttpEntity<ApiResponse> getStudentsByLastWeek(@RequestBody RoleEnum roleEnum){
+        ApiResponse apiResponse = userService.findStudentByLastWeek(roleEnum);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+
 }
