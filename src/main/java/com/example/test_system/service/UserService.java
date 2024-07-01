@@ -119,4 +119,9 @@ public class UserService {
         userRepository.save(user);
         return new ApiResponse("User successfully saved",true, HttpStatus.OK,user);
     }
+
+    public ApiResponse findAllUserByRoleEnum(RoleEnum roleEnum){
+        List<User> users = userRepository.findAllByRoleEnum(roleEnum);
+        return new ApiResponse("Success",true, HttpStatus.OK,users);
+    }
 }

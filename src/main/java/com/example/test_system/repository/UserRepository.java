@@ -1,6 +1,7 @@
 package com.example.test_system.repository;
 
 import com.example.test_system.entity.User;
+import com.example.test_system.entity.enums.RoleEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, UUID id);
 
     List<User> findAllByGroup_Id(Integer id);
+
+    List<User> findAllByRoleEnum(RoleEnum roleEnum);
 }

@@ -1,6 +1,7 @@
 package com.example.test_system.controller;
 
 import com.example.test_system.entity.User;
+import com.example.test_system.entity.enums.RoleEnum;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.UserDto;
 import com.example.test_system.security.CurrentUser;
@@ -43,5 +44,11 @@ public class UserController {
     public HttpEntity<ApiResponse> deleteUser(@PathVariable UUID id){
         ApiResponse apiResponse = userService.deleteUser(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+
+    @GetMapping("/byRoleEnum")
+    public HttpEntity<ApiResponse> getUserByRoleEnum(@RequestParam RoleEnum roleEnum){
+        ApiResponse allUserByRoleEnum = userService.findAllUserByRoleEnum(roleEnum);
+        return ResponseEntity.status(allUserByRoleEnum.getHttpStatus()).body(allUserByRoleEnum);
     }
 }
