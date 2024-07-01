@@ -27,7 +27,7 @@ public class UserService {
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ApiResponse saveUser(UserDto userDto, User user){
+    public ApiResponse saveUser(UserDto userDto){
         boolean existsed = userRepository.existsByPhoneNumber(userDto.getPhoneNumber());
         if(!existsed){
             List<Group> groupList = groupRepository.findAll();
