@@ -99,4 +99,24 @@ public class TestService {
         testRepository.delete(test);
         return new ApiResponse("Success",true,HttpStatus.OK,null);
     }
+
+
+//    Teacher o'zi yaratgan testlarni ko'rishi uchun method
+
+    public ApiResponse getTestByTeacher(User user){
+        List<Test> tests = testRepository.findByTeacherId(user.getId());
+        List<TestDto> testDtoList=new ArrayList<>();
+        for (Test test : tests) {
+            for (Question question : test.getQuestionList()) {
+                TestDto testDto = TestDto.builder()
+                        .createdAt(test.getCreatedAt())
+                        .passingScore(test.getPassingScore())
+                        .duration((int) test.getDuration().toMinutes())
+                        .questionId(question.getId())
+                        .build();
+                testDtoList.add(testDto);
+            }
+        }
+        return new ApiResponse("Success",true,HttpStatus.OK,testDtoList);
+    }
 }
