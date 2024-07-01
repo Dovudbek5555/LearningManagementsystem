@@ -39,6 +39,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private RoleEnum roleEnum;
+
     @ManyToMany
     private List<Group> group;
 

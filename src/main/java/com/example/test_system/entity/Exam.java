@@ -12,15 +12,22 @@ import java.time.LocalDate;
 @Builder
 @Entity
 public class Exam {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(unique = true, nullable = false)
+    private String name;
+
     @ManyToOne
     private Group group;
+
     @ManyToOne
     private Test test;
 
     private LocalDate startDate;
+
     private LocalDate finishDate;
 
 }

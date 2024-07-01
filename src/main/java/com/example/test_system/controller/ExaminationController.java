@@ -21,15 +21,15 @@ public class ExaminationController {
 
     private final ExaminationService examinationService;
 
-    @GetMapping("/start-test/{id}")
-    public HttpEntity<ApiResponse> startExam(@PathVariable Integer id, @CurrentUser User user){
-        ApiResponse apiResponse = examinationService.startTest(id, user);
+    @GetMapping("/start-test/{examId}")
+    public HttpEntity<ApiResponse> startExam(@PathVariable Integer examId, @CurrentUser User user){
+        ApiResponse apiResponse = examinationService.startTest(examId, user);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
-    @PostMapping("/pass-test/{id}")
-    public HttpEntity<ApiResponse> passResult(@PathVariable Integer id, @RequestBody List<AnswerDto> answerDtos){
-        ApiResponse apiResponse = examinationService.passResult(id, answerDtos);
+    @PostMapping("/pass-test/{resultId}")
+    public HttpEntity<ApiResponse> passResult(@PathVariable Integer resultId, @RequestBody List<AnswerDto> answerDtos){
+        ApiResponse apiResponse = examinationService.passResult(resultId, answerDtos);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
