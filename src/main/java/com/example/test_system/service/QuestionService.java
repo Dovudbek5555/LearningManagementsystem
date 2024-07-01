@@ -75,7 +75,7 @@ public class QuestionService {
     }
 
     public ApiResponse filterQuestionByDifficulty(String difficulty){
-        List<Question> allByDifficulty = questionRepository.findAllByDifficulty(difficulty);
+        List<Question> allByDifficulty = questionRepository.findAllByDifficulty(DifficultyEnum.valueOf(difficulty));
         return new ApiResponse("Success", true,HttpStatus.OK,allByDifficulty);
     }
 }
