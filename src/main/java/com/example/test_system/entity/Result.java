@@ -1,5 +1,6 @@
 package com.example.test_system.entity;
 
+import com.example.test_system.service.ExaminationService;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 @Builder
 public class Result {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,7 +24,7 @@ public class Result {
     private User student;
 
     @ManyToOne
-    private Test test;
+    private Exam exam;
 
     @OneToMany
     private List<Answer> answer;

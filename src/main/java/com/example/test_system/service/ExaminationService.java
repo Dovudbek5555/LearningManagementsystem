@@ -25,7 +25,6 @@ public class ExaminationService {
     private final ResultRepository resultRepository;
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
-    private final UserRepository userRepository;
 
     public ApiResponse startTest(Integer id, User user) {
         Exam exam = fetchExam(id);
@@ -39,9 +38,9 @@ public class ExaminationService {
             return new ApiResponse("This exam is outdated", false, HttpStatus.METHOD_NOT_ALLOWED, null);
         }
 
-        Result result = createResult(user, test);
+        Result result = createResult(user, test, exam);
         resultRepository.save(result);
-        ResultDto resultDto = createResultDto(user, test);
+        ResultDto resultDto = createResultDto(result);
 
         return new ApiResponse("Successfully started exam", true, HttpStatus.OK, resultDto);
     }
@@ -57,34 +56,25 @@ public class ExaminationService {
     }
 
     private boolean isUserInGroup(Exam exam, User user) {
-        if (user.getGroups().isEmpty()){
-            return false;
-        }
-        for (Group group : user.getGroups()) {
-            if (exam.getGroup().getId().equals(group.getId())){
-                return true;
-            }
-        }
-        return false;
+        return user.getGroups().stream().anyMatch(group -> group.getId().equals(exam.getGroup().getId()));
     }
 
-    private Result createResult(User user, Test test) {
+    private Result createResult(User user, Test test, Exam exam) {
         return Result.builder()
                 .student(user)
-                .test(test)
+                .exam(exam)
                 .startTime(LocalTime.now())
                 .endTime(LocalTime.now().plus(test.getDuration()))
                 .checked(false)
                 .build();
     }
 
-    private ResultDto createResultDto(User user, Test test) {
+    private ResultDto createResultDto(Result result) {
         return ResultDto.builder()
-                .studentId(user.getId())
-                .testId(test.getId())
-                .startTime(LocalTime.now())
-                .endTime(LocalTime.now().plus(test.getDuration()))
-                .checked(false)
+                .studentId(result.getStudent().getId())
+                .startTime(result.getStartTime())
+                .endTime(result.getEndTime())
+                .checked(result.getChecked())
                 .build();
     }
 
@@ -94,8 +84,6 @@ public class ExaminationService {
                 .orElse(false);
     }
 
-
-    //  SUBMIT RESULT
     public ApiResponse passResult(Integer resultId, List<AnswerDto> answerDtos) {
         Result result = fetchResult(resultId);
         int correctCount = 0;
@@ -106,8 +94,10 @@ public class ExaminationService {
             int optionCount = optionRepository.countByQuestion(question);
 
             if (optionCount > 0) {
-                ApiResponse response = processOptionAnswer(answerDto, correctCount);
-                if (!response.isSuccess()) {
+                ApiResponse response = processOptionAnswer(answerDto);
+                if (response.isSuccess()) {
+                    correctCount++;
+                } else {
                     return response;
                 }
             } else {
@@ -135,14 +125,13 @@ public class ExaminationService {
                 .orElseThrow(() -> GenericException.builder().message("Question not found").statusCode(404).build());
     }
 
-    private ApiResponse processOptionAnswer(AnswerDto answerDto, int correctCount) {
+    private ApiResponse processOptionAnswer(AnswerDto answerDto) {
         if (answerDto.getOptionId() == 0) {
             return new ApiResponse("No option selected", false, HttpStatus.BAD_REQUEST, null);
         }
 
         Optional<Option> option = optionRepository.findById(answerDto.getOptionId());
         if (option.isPresent() && option.get().getStatus()) {
-            correctCount++;
             return new ApiResponse(null, true, HttpStatus.OK, null);
         }
         return new ApiResponse("Option not found or incorrect", false, HttpStatus.NOT_FOUND, null);
@@ -155,11 +144,4 @@ public class ExaminationService {
                 .correct(false)
                 .build();
     }
-
-//----------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------------------------
-
-
-
 }
