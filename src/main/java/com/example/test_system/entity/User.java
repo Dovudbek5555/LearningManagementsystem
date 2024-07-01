@@ -39,8 +39,8 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private RoleEnum roleEnum;
-    @ManyToOne
-    private Group group;
+    @ManyToMany
+    private List<Group> group;
 
     @Column(nullable = false)
     private String password;

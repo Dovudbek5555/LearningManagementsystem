@@ -3,6 +3,7 @@ package com.example.test_system.payload;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -17,7 +18,7 @@ public class UserDto {
     private String phoneNumber;
     private Date birthDate;
     private Integer addressId;
-    private Integer groupId;
+    private List<Integer> groupId;
     private String roleEnum;
     private String password;
 }
