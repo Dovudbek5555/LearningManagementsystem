@@ -30,11 +30,10 @@ public class UserService {
     public ApiResponse saveUser(UserDto userDto, User user){
         boolean existsed = userRepository.existsByPhoneNumber(userDto.getPhoneNumber());
         if(!existsed){
-            Group group = groupRepository.findById(userDto.getGroupId())
-                    .orElseThrow(() -> GenericException.builder().message("Group not found").statusCode(400).build());
+            List<Group> groupList = groupRepository.findAll();
             Address address = addressRepository.findById(userDto.getAddressId())
                     .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
-            saveUsers(userDto,address,group);
+            saveUsers(userDto,address,groupList);
         }
         return new ApiResponse("Failed",false, HttpStatus.CONFLICT,null);
     }
@@ -43,6 +42,10 @@ public class UserService {
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : users) {
+            List<Integer> groupIds =new ArrayList<>();
+            for (Group group : user.getGroup()) {
+                groupIds.add(group.getId());
+            }
             UserDto userDto =UserDto.builder()
                     .firstname(user.getFirstname())
                     .lastname(user.getLastname())
@@ -50,7 +53,7 @@ public class UserService {
                     .birthDate(user.getBirthDate())
                     .roleEnum(String.valueOf(user.getRoleEnum()))
                     .addressId(user.getAddress().getId())
-                    .groupId(user.getGroup().getId())
+                    .groupId(groupIds)
                     .build();
             userDtos.add(userDto);
         }
@@ -60,6 +63,10 @@ public class UserService {
     public ApiResponse getOneUser(UUID id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> GenericException.builder().message("User not found").statusCode(400).build());
+        List<Integer> groupIds =new ArrayList<>();
+        for (Group group : user.getGroup()) {
+            groupIds.add(group.getId());
+        }
         UserDto userDto= UserDto.builder()
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
@@ -67,14 +74,13 @@ public class UserService {
                 .birthDate(user.getBirthDate())
                 .roleEnum(String.valueOf(user.getRoleEnum()))
                 .addressId(user.getAddress().getId())
-                .groupId(user.getGroup().getId())
+                .groupId(groupIds)
                 .build();
         return new ApiResponse("Success",true, HttpStatus.OK,userDto);
     }
 
     public ApiResponse updateUser(UserDto userDto){
-        Group group = groupRepository.findById(userDto.getGroupId())
-                .orElseThrow(() -> GenericException.builder().message("Group not found").statusCode(400).build());
+        List<Group> groupList = groupRepository.findAll();
         Address address = addressRepository.findById(userDto.getAddressId())
                 .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
         User user = userRepository.findById(userDto.getId())
@@ -84,7 +90,7 @@ public class UserService {
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setBirthDate(userDto.getBirthDate());
             user.setAddress(address);
-            user.setGroup(group);
+            user.setGroup(groupList);
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             userRepository.save(user);
             return new ApiResponse("Success",true, HttpStatus.OK,null);
@@ -96,7 +102,7 @@ public class UserService {
             return new ApiResponse("Success",true, HttpStatus.OK,null);
     }
 
-    public ApiResponse saveUsers(UserDto userDto,Address address,Group group){
+    public ApiResponse saveUsers(UserDto userDto,Address address,List<Group> group){
         User user = User.builder()
                 .firstname(userDto.getFirstname())
                 .lastname(userDto.getLastname())
