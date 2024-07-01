@@ -38,9 +38,9 @@ public class ExaminationService {
             return new ApiResponse("This exam is outdated", false, HttpStatus.METHOD_NOT_ALLOWED, null);
         }
 
-        Result result = createResult(user, test);
+        Result result = createResult(user, exam);
         resultRepository.save(result);
-        ResultDto resultDto = createResultDto(user, test);
+        ResultDto resultDto = createResultDto(user, exam);
 
         return new ApiResponse("Successfully started exam", true, HttpStatus.OK, resultDto);
     }
@@ -56,25 +56,30 @@ public class ExaminationService {
     }
 
     private boolean isUserInGroup(Exam exam, User user) {
-        return exam.getGroup().getId().equals(user.getGroup().getId());
+        for (Group group : user.getGroup()) {
+            if (exam.getGroup().getId().equals(group.getId())){
+                return true;
+            }
+        }
+        return false;
     }
 
-    private Result createResult(User user, Test test) {
+    private Result createResult(User user, Exam exam) {
         return Result.builder()
                 .student(user)
-                .test(test)
+                .exam(exam)
                 .startTime(LocalTime.now())
-                .endTime(LocalTime.now().plus(test.getDuration()))
+                .endTime(LocalTime.now().plus(exam.getTest().getDuration()))
                 .checked(false)
                 .build();
     }
 
-    private ResultDto createResultDto(User user, Test test) {
+    private ResultDto createResultDto(User user, Exam exam) {
         return ResultDto.builder()
                 .studentId(user.getId())
-                .testId(test.getId())
+                .examId(exam.getId())
                 .startTime(LocalTime.now())
-                .endTime(LocalTime.now().plus(test.getDuration()))
+                .endTime(LocalTime.now().plus(exam.getTest().getDuration()))
                 .checked(false)
                 .build();
     }
