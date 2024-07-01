@@ -39,7 +39,7 @@ public class QuestionController {
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
-    @PostMapping
+    @GetMapping("/list")
     public HttpEntity<ApiResponse> filterQuestionByDifficulty(@RequestParam String difficulty) {
         ApiResponse apiResponse = questionService.filterQuestionByDifficulty(difficulty);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
