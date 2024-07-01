@@ -41,7 +41,7 @@ public class User implements UserDetails {
     private RoleEnum roleEnum;
 
     @ManyToMany
-    private List<Group> groups;
+    private List<Group> group;
 
     @Column(nullable = false)
     private String password;
