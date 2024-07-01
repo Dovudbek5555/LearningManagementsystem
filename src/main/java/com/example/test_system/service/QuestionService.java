@@ -78,4 +78,9 @@ public class QuestionService {
         List<Question> allByDifficulty = questionRepository.findAllByDifficulty(DifficultyEnum.valueOf(difficulty));
         return new ApiResponse("Success", true,HttpStatus.OK,allByDifficulty);
     }
+
+    public ApiResponse filterQuestionBySubCategory(Integer subCategoryId){
+        List<Question> allBySubCategoryId = questionRepository.findAllBySubCategory_Id(subCategoryId);
+        return new ApiResponse("Success", true,HttpStatus.OK,allBySubCategoryId);
+    }
 }

@@ -11,8 +11,6 @@ public class OptionDto {
 
     private Integer id;
 
-    private String optionEnum;
-
     private String description;
 
     private Boolean status;

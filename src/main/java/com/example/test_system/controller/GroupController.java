@@ -10,6 +10,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/group")
 @RequiredArgsConstructor
@@ -43,5 +45,17 @@ public class GroupController {
     public HttpEntity<ApiResponse> deleteGroup(@PathVariable Integer id) {
         ApiResponse apiResponse = groupService.deleteGroup(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+
+    @GetMapping("/byTeacher")
+    public HttpEntity<ApiResponse> findByTeacher(@RequestParam UUID teacherId){
+        ApiResponse groupByTeacher = groupService.findGroupByTeacher(teacherId);
+        return ResponseEntity.status(groupByTeacher.getHttpStatus()).body(groupByTeacher);
+    }
+
+    @GetMapping("/byCategory")
+    public HttpEntity<ApiResponse> findByCategory(@RequestParam Integer categoryId){
+        ApiResponse groupByCategory = groupService.findGroupByCategory(categoryId);
+        return ResponseEntity.status(groupByCategory.getHttpStatus()).body(groupByCategory);
     }
 }

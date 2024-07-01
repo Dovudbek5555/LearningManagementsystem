@@ -16,6 +16,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class GroupService {
                     .build();
             groupDtos.add(groupDto);
         }
-        return new ApiResponse("Group successfully saved",true,HttpStatus.OK,groupDtos);
+        return new ApiResponse("Success",true,HttpStatus.OK,groupDtos);
     }
 
     public ApiResponse getOneGroup(Integer id) {
@@ -90,5 +91,15 @@ public class GroupService {
                 .orElseThrow(() -> GenericException.builder().message("Group not found").build());
         groupRepository.delete(group);
         return new ApiResponse("Success",true,HttpStatus.OK,null);
+    }
+
+    public ApiResponse findGroupByTeacher(UUID teacherId){
+        List<Group> allByTeacherId = groupRepository.findAllByTeacherId_Id(teacherId);
+        return new ApiResponse("Success",true,HttpStatus.OK,allByTeacherId);
+    }
+
+    public ApiResponse findGroupByCategory(Integer categoryId){
+        List<Group> allByCategoryId = groupRepository.findAllByCategory_Id(categoryId);
+        return new ApiResponse("Success",true,HttpStatus.OK,allByCategoryId);
     }
 }

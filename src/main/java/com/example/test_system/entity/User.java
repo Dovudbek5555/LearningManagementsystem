@@ -3,10 +3,12 @@ package com.example.test_system.entity;
 import com.example.test_system.entity.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +47,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @CreatedDate
+    private LocalDate createdDate;
 
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;

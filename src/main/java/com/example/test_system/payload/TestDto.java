@@ -13,10 +13,11 @@ import java.util.List;
 @Builder
 public class TestDto {
     private Integer id;
-    private Integer questionId;
+    private List<Integer> questionId;
     private LocalDate createdAt;
     private Integer duration;
     private Integer passingScore;
     private Integer subCategoryId;
+    private Integer questionCount;
     private List<Question> oQuestion;
 }

@@ -29,7 +29,7 @@ public class OptionController {
         ApiResponse apiResponse = optionService.updateOption(optionDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public HttpEntity<ApiResponse> deleteOption(@PathVariable Integer id) {
         ApiResponse apiResponse = optionService.deleteOption(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);

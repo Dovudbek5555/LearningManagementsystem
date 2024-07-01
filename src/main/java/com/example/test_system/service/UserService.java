@@ -27,13 +27,13 @@ public class UserService {
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ApiResponse saveUser(UserDto userDto){
+    public ApiResponse saveStudent(UserDto userDto){
+        Address address = addressRepository.findById(userDto.getAddressId())
+                .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
         boolean existsed = userRepository.existsByPhoneNumber(userDto.getPhoneNumber());
         if(!existsed){
-            List<Group> groupList = groupRepository.findAll();
-            Address address = addressRepository.findById(userDto.getAddressId())
-                    .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
-            saveUsers(userDto,address,groupList);
+            List<Group> groupList = new ArrayList<>();
+            return saveUsers(userDto,address,groupList);
         }
         return new ApiResponse("Failed",false, HttpStatus.CONFLICT,null);
     }
@@ -47,6 +47,7 @@ public class UserService {
                 groupIds.add(group.getId());
             }
             UserDto userDto =UserDto.builder()
+                    .id(user.getId())
                     .firstname(user.getFirstname())
                     .lastname(user.getLastname())
                     .phoneNumber(user.getPhoneNumber())
@@ -57,7 +58,7 @@ public class UserService {
                     .build();
             userDtos.add(userDto);
         }
-        return new ApiResponse("Success",true, HttpStatus.OK,userDtos);
+        return new ApiResponse("Success",true, HttpStatus.OK, userDtos);
     }
 
     public ApiResponse getOneUser(UUID id){
@@ -110,9 +111,10 @@ public class UserService {
                 .birthDate(userDto.getBirthDate())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .address(address)
-                .roleEnum(RoleEnum.STUDENT)
                 .group(group)
+                .roleEnum(RoleEnum.valueOf(userDto.getRoleEnum()))
                 .build();
+        userRepository.save(user);
         return new ApiResponse("User successfully saved",true, HttpStatus.OK,user);
     }
 }

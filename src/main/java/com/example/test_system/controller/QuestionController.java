@@ -39,9 +39,14 @@ public class QuestionController {
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
-    @GetMapping("/list")
+    @GetMapping("/byDifficulty")
     public HttpEntity<ApiResponse> filterQuestionByDifficulty(@RequestParam String difficulty) {
         ApiResponse apiResponse = questionService.filterQuestionByDifficulty(difficulty);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+    @GetMapping("/bySubCategory")
+    public HttpEntity<ApiResponse> filterQuestionBySubCategory(@RequestParam Integer subCategoryId) {
+        ApiResponse apiResponse = questionService.filterQuestionBySubCategory(subCategoryId);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 }
