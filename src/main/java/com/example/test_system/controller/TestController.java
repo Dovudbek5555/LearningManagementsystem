@@ -1,7 +1,9 @@
 package com.example.test_system.controller;
 
+import com.example.test_system.entity.User;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.TestDto;
+import com.example.test_system.security.CurrentUser;
 import com.example.test_system.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -38,6 +40,12 @@ public class TestController {
     @DeleteMapping("/{id}")
     public HttpEntity<ApiResponse> deleteTest(@PathVariable Integer id){
         ApiResponse apiResponse = testService.deleteTest(id);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+
+    @GetMapping("/byTeacher")
+    public HttpEntity<ApiResponse> getTestByTeacher(@CurrentUser User user){
+        ApiResponse apiResponse = testService.getTestByTeacher(user);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 }
