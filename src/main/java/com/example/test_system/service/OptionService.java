@@ -39,8 +39,9 @@ public class OptionService {
 
 
     public ApiResponse getOptionList(){
+        List<Option> optionList = optionRepository.findAll();
         List<OptionDto> optionDtos = new ArrayList<>();
-        for (Option option : optionRepository.findAll()) {
+        for (Option option : optionList) {
             OptionDto optionDto = OptionDto.builder()
                     .id(option.getId())
                     .description(option.getDescription())

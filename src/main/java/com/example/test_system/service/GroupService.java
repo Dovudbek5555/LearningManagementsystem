@@ -52,9 +52,8 @@ public class GroupService {
                     .teacherId(group.getTeacherId().getId())
                     .build();
             groupDtos.add(groupDto);
-            return new ApiResponse("Success",true,HttpStatus.OK,groupDtos);
         }
-        return new ApiResponse("Failed",false,HttpStatus.OK,groupDtos);
+        return new ApiResponse("Group successfully saved",true,HttpStatus.OK,groupDtos);
     }
 
     public ApiResponse getOneGroup(Integer id) {

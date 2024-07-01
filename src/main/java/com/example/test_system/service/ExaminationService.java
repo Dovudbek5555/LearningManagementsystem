@@ -38,9 +38,9 @@ public class ExaminationService {
             return new ApiResponse("This exam is outdated", false, HttpStatus.METHOD_NOT_ALLOWED, null);
         }
 
-        Result result = createResult(user, test, exam);
+        Result result = createResult(user, test);
         resultRepository.save(result);
-        ResultDto resultDto = createResultDto(result);
+        ResultDto resultDto = createResultDto(user, test);
 
         return new ApiResponse("Successfully started exam", true, HttpStatus.OK, resultDto);
     }
@@ -56,25 +56,26 @@ public class ExaminationService {
     }
 
     private boolean isUserInGroup(Exam exam, User user) {
-        return user.getGroups().stream().anyMatch(group -> group.getId().equals(exam.getGroup().getId()));
+        return exam.getGroup().getId().equals(user.getGroup().getId());
     }
 
-    private Result createResult(User user, Test test, Exam exam) {
+    private Result createResult(User user, Test test) {
         return Result.builder()
                 .student(user)
-                .exam(exam)
+                .test(test)
                 .startTime(LocalTime.now())
                 .endTime(LocalTime.now().plus(test.getDuration()))
                 .checked(false)
                 .build();
     }
 
-    private ResultDto createResultDto(Result result) {
+    private ResultDto createResultDto(User user, Test test) {
         return ResultDto.builder()
-                .studentId(result.getStudent().getId())
-                .startTime(result.getStartTime())
-                .endTime(result.getEndTime())
-                .checked(result.getChecked())
+                .studentId(user.getId())
+                .testId(test.getId())
+                .startTime(LocalTime.now())
+                .endTime(LocalTime.now().plus(test.getDuration()))
+                .checked(false)
                 .build();
     }
 
@@ -83,6 +84,7 @@ public class ExaminationService {
                 .map(exam -> exam.getFinishDate().isAfter(LocalDate.now()))
                 .orElse(false);
     }
+
 
     public ApiResponse passResult(Integer resultId, List<AnswerDto> answerDtos) {
         Result result = fetchResult(resultId);
@@ -94,10 +96,8 @@ public class ExaminationService {
             int optionCount = optionRepository.countByQuestion(question);
 
             if (optionCount > 0) {
-                ApiResponse response = processOptionAnswer(answerDto);
-                if (response.isSuccess()) {
-                    correctCount++;
-                } else {
+                ApiResponse response = processOptionAnswer(answerDto, correctCount);
+                if (!response.isSuccess()) {
                     return response;
                 }
             } else {
@@ -125,13 +125,14 @@ public class ExaminationService {
                 .orElseThrow(() -> GenericException.builder().message("Question not found").statusCode(404).build());
     }
 
-    private ApiResponse processOptionAnswer(AnswerDto answerDto) {
+    private ApiResponse processOptionAnswer(AnswerDto answerDto, int correctCount) {
         if (answerDto.getOptionId() == 0) {
             return new ApiResponse("No option selected", false, HttpStatus.BAD_REQUEST, null);
         }
 
         Optional<Option> option = optionRepository.findById(answerDto.getOptionId());
         if (option.isPresent() && option.get().getStatus()) {
+            correctCount++;
             return new ApiResponse(null, true, HttpStatus.OK, null);
         }
         return new ApiResponse("Option not found or incorrect", false, HttpStatus.NOT_FOUND, null);
@@ -144,4 +145,11 @@ public class ExaminationService {
                 .correct(false)
                 .build();
     }
+
+//----------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+
+
+
 }
