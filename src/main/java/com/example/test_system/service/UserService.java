@@ -34,46 +34,7 @@ public class UserService {
                     .orElseThrow(() -> GenericException.builder().message("Group not found").statusCode(400).build());
             Address address = addressRepository.findById(userDto.getAddressId())
                     .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
-            if (user.getRoleEnum()==RoleEnum.TEACHER) {
-
-                    User user1 = User.builder()
-                            .firstname(userDto.getFirstname())
-                            .lastname(userDto.getLastname())
-                            .phoneNumber(userDto.getPhoneNumber())
-                            .address(address)
-                            .group(group)
-                            .birthDate(userDto.getBirthDate())
-                            .roleEnum(RoleEnum.STUDENT)
-                            .password(passwordEncoder.encode(userDto.getPassword()))
-                            .build();
-                    userRepository.save(user1);
-                return new ApiResponse("Success",true, HttpStatus.OK,null);
-            } else if (user.getRoleEnum() == RoleEnum.ADMIN) {
-//                if (userDto.getRoleEnum().toUpperCase()=="TEACHER"){
-//                    User user2 = User.builder()
-//                        .firstname(userDto.getFirstname())
-//                        .lastname(userDto.getLastname())
-//                        .phoneNumber(userDto.getPhoneNumber())
-//                        .address(address)
-//                        .birthDate(userDto.getBirthDate())
-//                        .roleEnum(RoleEnum.valueOf(userDto.getRoleEnum().toUpperCase()))
-//                        .password(passwordEncoder.encode(userDto.getPassword()))
-//                        .build();
-//                    userRepository.save(user2);
-//                    return new ApiResponse("Success", true, HttpStatus.OK, null);
-//                }
-                User user3 = User.builder()
-                        .firstname(userDto.getFirstname())
-                        .lastname(userDto.getLastname())
-                        .phoneNumber(userDto.getPhoneNumber())
-                        .address(address)
-                        .group(group)
-                        .birthDate(userDto.getBirthDate())
-                        .roleEnum(RoleEnum.STUDENT)
-                        .password(passwordEncoder.encode(userDto.getPassword()))
-                        .build();
-                userRepository.save(user3);
-            }
+            saveUsers(userDto,address,group);
         }
         return new ApiResponse("Failed",false, HttpStatus.CONFLICT,null);
     }
@@ -133,5 +94,19 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> GenericException.builder().message("User not found").statusCode(400).build());
         userRepository.delete(user);
             return new ApiResponse("Success",true, HttpStatus.OK,null);
+    }
+
+    public ApiResponse saveUsers(UserDto userDto,Address address,Group group){
+        User user = User.builder()
+                .firstname(userDto.getFirstname())
+                .lastname(userDto.getLastname())
+                .phoneNumber(userDto.getPhoneNumber())
+                .birthDate(userDto.getBirthDate())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .address(address)
+                .roleEnum(RoleEnum.STUDENT)
+                .group(group)
+                .build();
+        return new ApiResponse("User successfully saved",true, HttpStatus.OK,user);
     }
 }
