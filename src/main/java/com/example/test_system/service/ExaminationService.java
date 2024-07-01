@@ -28,7 +28,6 @@ public class ExaminationService {
 
     public ApiResponse startTest(Integer id, User user) {
         Exam exam = fetchExam(id);
-        Test test = fetchTest(exam.getId());
 
         if (!isUserInGroup(exam, user)) {
             return new ApiResponse("Your group is not allowed for this test", false, HttpStatus.METHOD_NOT_ALLOWED, null);
@@ -150,11 +149,5 @@ public class ExaminationService {
                 .correct(false)
                 .build();
     }
-
-//----------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------------------------
-
-
 
 }

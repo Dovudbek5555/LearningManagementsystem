@@ -18,8 +18,8 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     @PostMapping
-    public HttpEntity<ApiResponse> saveUser(@RequestBody UserDto userDto){
-        ApiResponse apiResponse = userService.saveUser(userDto);
+    public HttpEntity<ApiResponse> saveStudent(@RequestBody UserDto userDto){
+        ApiResponse apiResponse = userService.saveStudent(userDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @GetMapping

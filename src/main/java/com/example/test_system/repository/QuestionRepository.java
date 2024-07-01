@@ -11,4 +11,5 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     boolean existsByQuestion(String question);
 
     List<Question> findAllByDifficulty(DifficultyEnum difficulty);
+    List<Question> findAllBySubCategory_Id(Integer subCategoryId);
 }

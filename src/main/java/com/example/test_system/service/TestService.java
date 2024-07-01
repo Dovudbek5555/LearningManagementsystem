@@ -25,16 +25,22 @@ public class TestService {
     private final GroupRepository groupRepository;
 
     public ApiResponse saveTest(TestDto testDto) {
-        Question questionList = questionRepository.findById(testDto.getQuestionId())
-                .orElseThrow(() -> GenericException.builder()
-                        .message("Question not found")
-                        .statusCode(400)
-                        .build());
+        List<Question> questions = new ArrayList<>();
+        for (Integer i : testDto.getQuestionId()) {
+            Question question = questionRepository.findById(i)
+                    .orElseThrow(() -> GenericException.builder().message("Question not found").statusCode(400).build());
+            questions.add(question);
+        }
+//        Question questionList = questionRepository.findById(testDto.getQuestionId())
+//                .orElseThrow(() -> GenericException.builder()
+//                        .message("Question not found")
+//                        .statusCode(400)
+//                        .build());
         SubCategory subCategory = subCategoryRepository.findById(testDto.getSubCategoryId())
                 .orElseThrow(() -> GenericException.builder().message("subCategory not found").statusCode(400).build());
         Duration duration=Duration.ofMinutes(testDto.getDuration());
         Test test=Test.builder()
-                .questionList(List.of(questionList))
+                .questionList(questions)
                 .createdAt(LocalDate.now())
                 .duration(duration)
                 .passingScore(testDto.getPassingScore())
@@ -65,10 +71,11 @@ public class TestService {
         for (Test test : testList) {
             for (Question question : test.getQuestionList()) {
                 TestDto testDto = TestDto.builder()
+                        .id(test.getId())
                         .createdAt(test.getCreatedAt())
                         .passingScore(test.getPassingScore())
                         .duration((int) test.getDuration().toMinutes())
-                        .questionId(question.getId())
+                        .questionCount(test.getQuestionList().size() )
                         .build();
                 testDtoList.add(testDto);
             }
@@ -80,15 +87,19 @@ public class TestService {
     public ApiResponse updateTest(TestDto testDto){
         SubCategory subCategory = subCategoryRepository.findById(testDto.getSubCategoryId())
                 .orElseThrow(() -> GenericException.builder().message("SubCategory not found").statusCode(400).build());
-        Question questionList =questionRepository.findById(testDto.getQuestionId())
-                .orElseThrow(() -> GenericException.builder().message("Question not found").statusCode(400).build());
+        List<Question> oQuestions=new ArrayList<>();
+        for (Integer i : testDto.getQuestionId()) {
+            Question question = questionRepository.findById(i)
+                    .orElseThrow(() -> GenericException.builder().message("Question not found").statusCode(400).build());
+            oQuestions.add(question);
+        }
         Test test = testRepository.findById(testDto.getId())
                 .orElseThrow(() -> GenericException.builder().message("Test not found").statusCode(400).build());
         test.setId(testDto.getId());
         test.setPassingScore(testDto.getPassingScore());
         test.setDuration(Duration.ofMinutes(testDto.getDuration()));
         test.setSubCategory(subCategory);
-        test.setQuestionList(List.of(questionList));
+        test.setQuestionList(oQuestions);
         testRepository.save(test);
         return new ApiResponse("Success",true,HttpStatus.OK,test);
     }

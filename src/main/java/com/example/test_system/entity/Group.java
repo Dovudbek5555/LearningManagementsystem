@@ -2,7 +2,9 @@ package com.example.test_system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -25,5 +27,8 @@ public class Group {
 
     @ManyToOne
     private User teacherId;
+
+    @CreatedDate
+    private LocalDate createdAt;
 
 }
