@@ -24,6 +24,8 @@ public class ResultDto {
 
     private Integer examId;
 
+    private List<AnswerDto> answerDtos;
+
     private LocalTime startTime;
 
     private LocalTime endTime;

@@ -2,6 +2,8 @@ package com.example.test_system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 
@@ -25,6 +27,9 @@ public class Exam {
 
     @ManyToOne
     private Test test;
+
+    @CreatedDate
+    private LocalDate createdAt;
 
     private LocalDate startDate;
 

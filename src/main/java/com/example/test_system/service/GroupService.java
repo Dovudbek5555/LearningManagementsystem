@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -101,5 +102,12 @@ public class GroupService {
     public ApiResponse findGroupByCategory(Integer categoryId){
         List<Group> allByCategoryId = groupRepository.findAllByCategory_Id(categoryId);
         return new ApiResponse("Success",true,HttpStatus.OK,allByCategoryId);
+    }
+
+    public ApiResponse findGroupByLastWeek(){
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.minusDays(6);
+        Integer i = groupRepository.countByCreatedAtAfter(startDate);
+        return new ApiResponse("Groups created in last 6 days", true, HttpStatus.OK, i);
     }
 }

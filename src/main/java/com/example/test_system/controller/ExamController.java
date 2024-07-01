@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 @RequestMapping("/exam")
 public class ExamController {
     private final ExamService examService;
@@ -44,4 +45,11 @@ public class ExamController {
         ApiResponse apiResponse = examService.deleteExamById(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+
+    @GetMapping("/groups/by-last-week")
+    public HttpEntity<ApiResponse> getByLastWeek(){
+        ApiResponse apiResponse = examService.getExamsByLastWeek();
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+
 }

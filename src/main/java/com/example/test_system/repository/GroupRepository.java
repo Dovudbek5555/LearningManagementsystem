@@ -5,6 +5,7 @@ import com.example.test_system.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.w3c.dom.stylesheets.LinkStyle;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,4 +13,6 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     boolean existsByName(String name);
     List<Group> findAllByTeacherId_Id(UUID teacherId);
     List<Group> findAllByCategory_Id(Integer categoryId);
+    Integer countByCreatedAtAfter(LocalDate date);
+    List<Group> findByTeacher_Id(UUID id);
 }
