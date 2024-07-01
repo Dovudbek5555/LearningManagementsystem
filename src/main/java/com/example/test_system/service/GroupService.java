@@ -36,7 +36,7 @@ public class GroupService {
                 Group group= Group.builder()
                         .name(groupDto.getName())
                         .category(category)
-                        .teacherId(user1)
+                        .teacher(user1)
                         .build();
                 groupRepository.save(group);
                 return new ApiResponse("Success",true, HttpStatus.OK,null);
@@ -51,7 +51,7 @@ public class GroupService {
             GroupDto groupDto= GroupDto.builder()
                     .name(group.getName())
                     .categoryId(group.getCategory().getId())
-                    .teacherId(group.getTeacherId().getId())
+                    .teacherId(group.getTeacher().getId())
                     .build();
             groupDtos.add(groupDto);
         }
@@ -64,7 +64,7 @@ public class GroupService {
         GroupDto groupDto= GroupDto.builder()
                 .name(group.getName())
                 .categoryId(group.getCategory().getId())
-                .teacherId(group.getTeacherId().getId())
+                .teacherId(group.getTeacher().getId())
                 .build();
         return new ApiResponse("Success",true,HttpStatus.OK,groupDto);
     }
@@ -80,7 +80,7 @@ public class GroupService {
                     .orElseThrow(() -> GenericException.builder().message("User not found").build());
             group.setName(groupDto.getName());
             group.setCategory(category);
-            group.setTeacherId(user);
+            group.setTeacher(user);
             groupRepository.save(group);
             return new ApiResponse("Success",true,HttpStatus.OK,null);
         }
