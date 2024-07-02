@@ -18,5 +18,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findAllByGroup_Id(Integer id);
 
     List<User> findAllByRoleEnum(RoleEnum roleEnum);
-    Integer countByCreatedDateIsAfterAndRoleEnum(LocalDate localDate, RoleEnum roleEnum);
+    Integer countByRoleEnumAndCreatedDateIsAfter(RoleEnum roleEnum, LocalDate localDate);
 }
