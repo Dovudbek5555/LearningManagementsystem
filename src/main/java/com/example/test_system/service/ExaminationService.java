@@ -25,6 +25,7 @@ public class ExaminationService {
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
     private final GroupRepository groupRepository;
+    private final AnswerRepository answerRepository;
 
     public ApiResponse startTest(Integer id, User user) {
         Exam exam = fetchExam(id);
@@ -78,7 +79,7 @@ public class ExaminationService {
                 .build();
     }
 
-    public boolean isExamAvailable(Integer examId) {
+    private boolean isExamAvailable(Integer examId) {
         return examRepository.findById(examId)
                 .map(exam -> exam.getFinishDate().isAfter(LocalDate.now()))
                 .orElse(false);
@@ -238,6 +239,29 @@ public class ExaminationService {
                 .correct(answer.isCorrect())
                 .questionId(answer.getQuestion().getId())
                 .build();
+    }
+
+    public ApiResponse checkAnswer(Integer answerId, Boolean isCorrect) {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> GenericException.builder().message("Answer not found").statusCode(404).build());
+        if (isCorrect) {
+            Result result = resultRepository.findByAnswerContains(answer);
+            result.getAnswer().remove(answer);
+            answerRepository.delete(answer);
+            result.setCorrectCount(result.getCorrectCount()+1);
+            if (result.getAnswer().isEmpty()){
+                result.setChecked(true);
+                resultRepository.save(result);
+                return new ApiResponse("Checked", true, HttpStatus.OK, null);
+            }
+            resultRepository.save(result);
+            return new ApiResponse("Checked", true, HttpStatus.OK, null);
+        } else {
+            Result result = resultRepository.findByAnswerContains(answer);
+            result.getAnswer().remove(answer);
+            answerRepository.delete(answer);
+            resultRepository.save(result);
+        }
+        return new ApiResponse("Failed", true, HttpStatus.OK, null);
     }
 
 }

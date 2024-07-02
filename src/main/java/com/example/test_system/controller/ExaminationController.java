@@ -37,7 +37,7 @@ public class ExaminationController {
     }
 
     @PreAuthorize("hasRole('TEACHER')")
-    @GetMapping("/uchecked-exam")
+    @GetMapping("/unchecked-exam")
     public HttpEntity<ApiResponse> getUncheckedResults(@CurrentUser User user){
         ApiResponse apiResponse = examinationService.getResultByUncheckedOfTeacher(user);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
