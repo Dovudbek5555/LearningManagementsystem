@@ -58,9 +58,9 @@ public class UserController {
         ApiResponse apiResponse = userService.saveTeachers(userDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
-    @PreAuthorize("hasRole('TEACHER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/by-last-week")
-    public HttpEntity<ApiResponse> getStudentsByLastWeek(@RequestBody RoleEnum roleEnum){
+    public HttpEntity<ApiResponse> getUserByLastWeek(@RequestParam String roleEnum){
         ApiResponse apiResponse = userService.findStudentByLastWeek(roleEnum);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }

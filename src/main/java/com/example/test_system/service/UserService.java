@@ -104,8 +104,6 @@ public class UserService {
             return new ApiResponse("Success",true, HttpStatus.OK,null);
     }
 
-
-
     public ApiResponse saveUsers(UserDto userDto,Address address,List<Group> group){
         User user = User.builder()
                 .firstname(userDto.getFirstname())
@@ -142,10 +140,10 @@ public class UserService {
         return new ApiResponse("Success",true, HttpStatus.OK,users);
     }
 
-    public ApiResponse findStudentByLastWeek(RoleEnum roleEnum){
+    public ApiResponse findStudentByLastWeek(String roleEnum){
         LocalDate now = LocalDate.now();
         LocalDate startDate = now.minusDays(6);
-        Integer i = userRepository.countByCreatedDateIsAfterAndRoleEnum(startDate, roleEnum);
+        Integer i = userRepository.countByRoleEnumAndCreatedDateIsAfter( RoleEnum.valueOf(roleEnum),startDate);
         return new ApiResponse("Students added last 6 days", true, HttpStatus.OK, i);
     }
 }
