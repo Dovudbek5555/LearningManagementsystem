@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
@@ -28,8 +30,8 @@ public class ExamController {
 
     @PreAuthorize("hasRole('TEACHER')")
     @GetMapping
-    public HttpEntity<ApiResponse> getAllExams(@CurrentUser User user) {
-        ApiResponse apiResponse = examService.getAllExams(user);
+    public HttpEntity<ApiResponse> getAllExams() {
+        ApiResponse apiResponse = examService.getAllExams();
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
@@ -59,4 +61,9 @@ public class ExamController {
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
+    @GetMapping("/student")
+    public HttpEntity<ApiResponse> getExamsByStudent(UUID studentId){
+        ApiResponse examsByStudentId = examService.getExamsByStudentId(studentId);
+        return ResponseEntity.status(examsByStudentId.getHttpStatus()).body(examsByStudentId);
+    }
 }
