@@ -29,11 +29,12 @@ public class ExamService {
     private final TestRepository testRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+
     public ApiResponse saveExam(ExamDto examDto) {
         Test test = testRepository.findById(examDto.getTestId())
-                .orElseThrow(() -> GenericException.builder().message("Test not found").build());
+                .orElseThrow(() -> GenericException.builder().message("Test not found").statusCode(404).build());
         Group group = groupRepository.findById(examDto.getGroupId())
-                .orElseThrow(() -> GenericException.builder().message("Group not found").build());
+                .orElseThrow(() -> GenericException.builder().message("Group not found").statusCode(404).build());
         Exam exam = Exam.builder()
                 .test(test)
                 .group(group)
