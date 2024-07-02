@@ -32,4 +32,6 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
     List<RatingBySumCorrectCount> findStudentCorrectCountsByGroups(@Param("user") List<User> users);
 
 
+    List<Result> findAllByCheckedIsFalse();
+
 }
