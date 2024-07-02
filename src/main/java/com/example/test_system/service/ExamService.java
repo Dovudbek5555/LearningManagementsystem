@@ -107,4 +107,12 @@ public class ExamService {
         }
         return new ApiResponse("User not found",true, HttpStatus.NOT_FOUND,null);
     }
+
+    public ApiResponse getExamsByLastWeek(){
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.minusDays(6);
+        Integer i = examRepository.countByCreatedAtAfter(startDate);
+        return new ApiResponse("Exams created in last week",true, HttpStatus.OK, i);
+    }
+
 }

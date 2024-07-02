@@ -110,4 +110,5 @@ public class GroupService {
         Integer i = groupRepository.countByCreatedAtAfter(startDate);
         return new ApiResponse("Groups created in last 6 days", true, HttpStatus.OK, i);
     }
+
 }

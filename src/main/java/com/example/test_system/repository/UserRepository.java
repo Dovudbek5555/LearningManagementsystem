@@ -5,6 +5,7 @@ import com.example.test_system.entity.User;
 import com.example.test_system.entity.enums.RoleEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,4 +18,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findAllByGroup_Id(Integer id);
 
     List<User> findAllByRoleEnum(RoleEnum roleEnum);
+    Integer countByCreatedDateIsAfterAndRoleEnum(LocalDate localDate, RoleEnum roleEnum);
 }

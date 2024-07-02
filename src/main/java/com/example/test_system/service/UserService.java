@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -136,10 +137,15 @@ public class UserService {
         return new ApiResponse("User successfully saved",true, HttpStatus.OK,user);
     }
 
-
-
     public ApiResponse findAllUserByRoleEnum(RoleEnum roleEnum){
         List<User> users = userRepository.findAllByRoleEnum(roleEnum);
         return new ApiResponse("Success",true, HttpStatus.OK,users);
+    }
+
+    public ApiResponse findStudentByLastWeek(RoleEnum roleEnum){
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.minusDays(6);
+        Integer i = userRepository.countByCreatedDateIsAfterAndRoleEnum(startDate, roleEnum);
+        return new ApiResponse("Students added last 6 days", true, HttpStatus.OK, i);
     }
 }

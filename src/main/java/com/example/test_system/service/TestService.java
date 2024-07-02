@@ -123,7 +123,7 @@ public class TestService {
                         .createdAt(test.getCreatedAt())
                         .passingScore(test.getPassingScore())
                         .duration((int) test.getDuration().toMinutes())
-                        .questionId(question.getId())
+                        .questionCount(test.getQuestionList().size())
                         .build();
                 testDtoList.add(testDto);
             }

@@ -8,6 +8,7 @@ import com.example.test_system.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,33 +18,39 @@ public class TestController {
     private final TestService testService;
 
     @PostMapping
+    @PreAuthorize("hasRole('TEACHER')")
     public HttpEntity<ApiResponse> saveTest(@RequestBody TestDto testDto) {
         ApiResponse apiResponse = testService.saveTest(testDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('TEACHER')")
     public HttpEntity<ApiResponse> getTests(@PathVariable Integer id){
         ApiResponse oneTest = testService.getOneTest(id);
         return ResponseEntity.status(oneTest.getHttpStatus()).body(oneTest);
     }
     @GetMapping
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     public HttpEntity<ApiResponse> getTests(){
         ApiResponse allTests = testService.getAllTests();
         return ResponseEntity.status(allTests.getHttpStatus()).body(allTests);
     }
     @PutMapping
+    @PreAuthorize("hasRole('TEACHER')")
     public HttpEntity<ApiResponse> updateTest(@RequestBody TestDto testDto){
         ApiResponse apiResponse = testService.updateTest(testDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('TEACHER')")
     public HttpEntity<ApiResponse> deleteTest(@PathVariable Integer id){
         ApiResponse apiResponse = testService.deleteTest(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
     @GetMapping("/byTeacher")
+    @PreAuthorize("hasRole('TEACHER')")
     public HttpEntity<ApiResponse> getTestByTeacher(@CurrentUser User user){
         ApiResponse apiResponse = testService.getTestByTeacher(user);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);

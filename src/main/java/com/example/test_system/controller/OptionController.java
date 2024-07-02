@@ -28,11 +28,13 @@ public class OptionController {
         ApiResponse apiResponse = optionService.getOptionList();
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+    @PreAuthorize("hasRole('TEACHER')")
     @PutMapping
     public HttpEntity<ApiResponse> updateOption(@RequestBody OptionDto optionDto) {
         ApiResponse apiResponse = optionService.updateOption(optionDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+    @PreAuthorize("hasRole('TEACHER')")
     @DeleteMapping("/{id}")
     public HttpEntity<ApiResponse> deleteOption(@PathVariable Integer id) {
         ApiResponse apiResponse = optionService.deleteOption(id);
