@@ -42,6 +42,12 @@ public class SubCategoryController {
         ApiResponse apiResponse = subCategoryService.deleteSubCategory(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+
+    @GetMapping("/byCategory")
+    public HttpEntity<ApiResponse> getSubCategoryByCategory(@RequestParam Integer categoryId) {
+        ApiResponse category = subCategoryService.findAllByCategory(categoryId);
+        return ResponseEntity.status(category.getHttpStatus()).body(category);
+    }
 }
 
 

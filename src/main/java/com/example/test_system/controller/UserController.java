@@ -46,10 +46,15 @@ public class UserController {
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
-    @GetMapping("/users/by-last-week")
-    public HttpEntity<ApiResponse> getStudentsByLastWeek(@RequestBody RoleEnum roleEnum){
-        ApiResponse apiResponse = userService.findStudentByLastWeek(roleEnum);
+    @PostMapping("/teacher")
+    public HttpEntity<ApiResponse> saveTeacher(@RequestBody UserDto userDto){
+        ApiResponse apiResponse = userService.saveTeachers(userDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
+    @GetMapping("/byRoleEnum")
+    public HttpEntity<ApiResponse> getUserByRoleEnum(@RequestParam RoleEnum roleEnum){
+        ApiResponse allUserByRoleEnum = userService.findAllUserByRoleEnum(roleEnum);
+        return ResponseEntity.status(allUserByRoleEnum.getHttpStatus()).body(allUserByRoleEnum);
+    }
 }

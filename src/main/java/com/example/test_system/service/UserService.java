@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +32,7 @@ public class UserService {
                 .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
         boolean existsed = userRepository.existsByPhoneNumber(userDto.getPhoneNumber());
         if(!existsed){
-            List<Group> groupList = new ArrayList<>();
+            List<Group> groupList = groupRepository.findAll();
             return saveUsers(userDto,address,groupList);
         }
         return new ApiResponse("Failed",false, HttpStatus.CONFLICT,null);
@@ -104,6 +103,8 @@ public class UserService {
             return new ApiResponse("Success",true, HttpStatus.OK,null);
     }
 
+
+
     public ApiResponse saveUsers(UserDto userDto,Address address,List<Group> group){
         User user = User.builder()
                 .firstname(userDto.getFirstname())
@@ -119,10 +120,26 @@ public class UserService {
         return new ApiResponse("User successfully saved",true, HttpStatus.OK,user);
     }
 
-    public ApiResponse findStudentByLastWeek(RoleEnum roleEnum){
-        LocalDate now = LocalDate.now();
-        LocalDate startDate = now.minusDays(6);
-        Integer i = userRepository.countByCreatedDateIsAfterAndRoleEnum(startDate, roleEnum);
-        return new ApiResponse("Students added last 6 days", true, HttpStatus.OK, i);
+    public ApiResponse saveTeachers(UserDto userDto){
+        Address address = addressRepository.findById(userDto.getAddressId())
+                .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
+        User user= User.builder()
+                .firstname(userDto.getFirstname())
+                .lastname(userDto.getLastname())
+                .phoneNumber(userDto.getPhoneNumber())
+                .birthDate(userDto.getBirthDate())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .roleEnum(RoleEnum.TEACHER)
+                .address(address)
+                .build();
+        userRepository.save(user);
+        return new ApiResponse("User successfully saved",true, HttpStatus.OK,user);
+    }
+
+
+
+    public ApiResponse findAllUserByRoleEnum(RoleEnum roleEnum){
+        List<User> users = userRepository.findAllByRoleEnum(roleEnum);
+        return new ApiResponse("Success",true, HttpStatus.OK,users);
     }
 }

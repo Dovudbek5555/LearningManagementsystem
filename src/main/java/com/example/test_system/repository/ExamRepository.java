@@ -8,12 +8,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 public interface ExamRepository extends JpaRepository<Exam, Integer> {
     @Query("SELECT e FROM Exam e WHERE e.startDate >= :startDate AND e.finishDate <= :endDate")
     List<Exam> findExamsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-    Integer countByCreatedAtAfter(LocalDate date);
-    List<Exam> findAllByCreatedBy(UUID id);
 
+    List<Exam> findAllByGroup_IdAndFinishDateAfter(Integer id, LocalDate date);
 }

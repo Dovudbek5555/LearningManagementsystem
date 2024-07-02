@@ -9,8 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public interface ResultRepository extends JpaRepository<Result, Integer> {
     List<Result> findAllByExam_IdOrderByCorrectCountDesc(Integer examId);
@@ -22,11 +23,15 @@ public interface ResultRepository extends JpaRepository<Result, Integer> {
             "ORDER BY SUM(r.correctCount) DESC")
     List<RatingBySumCorrectCount> findStudentCorrectCountsByExams(@Param("exams") List<Exam> exams);
 
+
+    @Query("SELECT RatingBySumCorrectCount(r.student, SUM(r.correctCount)) " +
+            "FROM Result r " +
+            "WHERE r.student IN :users " +
+            "GROUP BY r.student " +
+            "ORDER BY SUM(r.correctCount) DESC")
+    List<RatingBySumCorrectCount> findStudentCorrectCountsByGroups(@Param("user") List<User> users);
+
+
     List<Result> findAllByCheckedIsFalse();
 
-    @Query("SELECT r FROM Result r " +
-            "JOIN r.exam e " +
-            "WHERE r.checked = false " +
-            "AND e.group = :group")
-    List<Result> findUncheckedResultsByGroup(@Param("group") Group group);
 }

@@ -1,5 +1,6 @@
 package com.example.test_system.controller;
 
+import com.example.test_system.entity.Group;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.service.RatingService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,10 @@ public class RatingController {
         return ResponseEntity.ok(apiResponse);
     }
 
-//    @GetMapping("byGroup")
+    @GetMapping("/byGroup")
+    public HttpEntity<ApiResponse> getTopStudentRatingByGroup(@RequestParam Integer group){
+        ApiResponse topStudentsByGroup = ratingService.getTopStudentsByGroup(group);
+        return ResponseEntity.ok(topStudentsByGroup);
+    }
 
 }
