@@ -44,4 +44,6 @@ public class UserController {
         ApiResponse apiResponse = userService.deleteUser(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+
+
 }

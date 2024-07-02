@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -116,5 +117,49 @@ public class UserService {
                 .build();
         userRepository.save(user);
         return new ApiResponse("User successfully saved",true, HttpStatus.OK,user);
+    }
+
+    public ApiResponse getStudentByGroupId(Integer id){
+        List<User> users = userRepository.findAllByGroupId(id);
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user : users) {
+            List<Integer> groupIds = new ArrayList<>();
+            for (Group group : user.getGroup()) {
+                groupIds.add(group.getId());
+            }
+            UserDto userDto = UserDto.builder()
+                    .id(user.getId())
+                    .firstname(user.getFirstname())
+                    .lastname(user.getLastname())
+                    .phoneNumber(user.getPhoneNumber())
+                    .birthDate(user.getBirthDate())
+                    .roleEnum(String.valueOf(user.getRoleEnum()))
+                    .addressId(user.getAddress().getId())
+                    .groupId(groupIds)
+                    .build();
+            userDtos.add(userDto);
+        }
+        return new ApiResponse("Success",true, HttpStatus.OK,userDtos);
+    }
+
+    public ApiResponse getStudentByTeacherId(UUID id){
+        List<Group> groups = groupRepository.findAllByTeacherId_Id(id);
+        List<UserDto> userDtos = new ArrayList<>();
+        for (Group group : groups) {
+            List<User> allByGroupId = userRepository.findAllByGroupId(group.getId());
+            for (User user : allByGroupId) {
+                UserDto userDto = UserDto.builder()
+                        .id(user.getId())
+                        .firstname(user.getFirstname())
+                        .lastname(user.getLastname())
+                        .phoneNumber(user.getPhoneNumber())
+                        .birthDate(user.getBirthDate())
+                        .addressId(user.getAddress().getId())
+                        .groupId(Collections.singletonList(group.getId()))
+                        .build();
+                userDtos.add(userDto);
+            }
+        }
+        return new ApiResponse("Success",true, HttpStatus.OK,userDtos);
     }
 }
