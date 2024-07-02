@@ -1,5 +1,6 @@
 package com.example.test_system.repository;
 
+import com.example.test_system.entity.Group;
 import com.example.test_system.entity.User;
 import com.example.test_system.entity.enums.RoleEnum;
 import org.springframework.data.jpa.repository.JpaRepository;

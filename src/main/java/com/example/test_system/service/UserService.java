@@ -32,7 +32,7 @@ public class UserService {
                 .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
         boolean existsed = userRepository.existsByPhoneNumber(userDto.getPhoneNumber());
         if(!existsed){
-            List<Group> groupList = new ArrayList<>();
+            List<Group> groupList = groupRepository.findAll();
             return saveUsers(userDto,address,groupList);
         }
         return new ApiResponse("Failed",false, HttpStatus.CONFLICT,null);
@@ -119,6 +119,24 @@ public class UserService {
         userRepository.save(user);
         return new ApiResponse("User successfully saved",true, HttpStatus.OK,user);
     }
+
+    public ApiResponse saveTeachers(UserDto userDto){
+        Address address = addressRepository.findById(userDto.getAddressId())
+                .orElseThrow(() -> GenericException.builder().message("Address not found").statusCode(400).build());
+        User user= User.builder()
+                .firstname(userDto.getFirstname())
+                .lastname(userDto.getLastname())
+                .phoneNumber(userDto.getPhoneNumber())
+                .birthDate(userDto.getBirthDate())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .roleEnum(RoleEnum.TEACHER)
+                .address(address)
+                .build();
+        userRepository.save(user);
+        return new ApiResponse("User successfully saved",true, HttpStatus.OK,user);
+    }
+
+
 
     public ApiResponse findAllUserByRoleEnum(RoleEnum roleEnum){
         List<User> users = userRepository.findAllByRoleEnum(roleEnum);
