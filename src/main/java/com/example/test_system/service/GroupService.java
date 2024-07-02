@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class GroupService {
                 Group group= Group.builder()
                         .name(groupDto.getName())
                         .category(category)
-                        .teacherId(user1)
+                        .teacher(user1)
                         .build();
                 groupRepository.save(group);
                 return new ApiResponse("Success",true, HttpStatus.OK,null);
@@ -50,7 +51,7 @@ public class GroupService {
             GroupDto groupDto= GroupDto.builder()
                     .name(group.getName())
                     .categoryId(group.getCategory().getId())
-                    .teacherId(group.getTeacherId().getId())
+                    .teacherId(group.getTeacher().getId())
                     .build();
             groupDtos.add(groupDto);
         }
@@ -63,7 +64,7 @@ public class GroupService {
         GroupDto groupDto= GroupDto.builder()
                 .name(group.getName())
                 .categoryId(group.getCategory().getId())
-                .teacherId(group.getTeacherId().getId())
+                .teacherId(group.getTeacher().getId())
                 .build();
         return new ApiResponse("Success",true,HttpStatus.OK,groupDto);
     }
@@ -79,7 +80,7 @@ public class GroupService {
                     .orElseThrow(() -> GenericException.builder().message("User not found").build());
             group.setName(groupDto.getName());
             group.setCategory(category);
-            group.setTeacherId(user);
+            group.setTeacher(user);
             groupRepository.save(group);
             return new ApiResponse("Success",true,HttpStatus.OK,null);
         }
@@ -101,5 +102,12 @@ public class GroupService {
     public ApiResponse findGroupByCategory(Integer categoryId){
         List<Group> allByCategoryId = groupRepository.findAllByCategory_Id(categoryId);
         return new ApiResponse("Success",true,HttpStatus.OK,allByCategoryId);
+    }
+
+    public ApiResponse findGroupByLastWeek(){
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.minusDays(6);
+        Integer i = groupRepository.countByCreatedAtAfter(startDate);
+        return new ApiResponse("Groups created in last 6 days", true, HttpStatus.OK, i);
     }
 }

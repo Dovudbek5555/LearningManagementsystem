@@ -4,6 +4,7 @@ import com.example.test_system.entity.*;
 import com.example.test_system.exceptions.GenericException;
 import com.example.test_system.payload.AnswerDto;
 import com.example.test_system.payload.ApiResponse;
+import com.example.test_system.payload.GroupDto;
 import com.example.test_system.payload.ResultDto;
 import com.example.test_system.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +24,7 @@ public class ExaminationService {
     private final ResultRepository resultRepository;
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
+    private final GroupRepository groupRepository;
 
     public ApiResponse startTest(Integer id, User user) {
         Exam exam = fetchExam(id);
@@ -47,11 +47,6 @@ public class ExaminationService {
     private Exam fetchExam(Integer examId) {
         return examRepository.findById(examId)
                 .orElseThrow(() -> GenericException.builder().message("Exam not found").statusCode(404).build());
-    }
-
-    private Test fetchTest(Integer testId) {
-        return testRepository.findById(testId)
-                .orElseThrow(() -> GenericException.builder().message("Test not found").statusCode(404).build());
     }
 
     private boolean isUserInGroup(Exam exam, User user) {
@@ -147,6 +142,101 @@ public class ExaminationService {
                 .question(question)
                 .answer(answerText)
                 .correct(false)
+                .build();
+    }
+
+//    private ApiResponse getResultByUncheckedOfTeacher(User user){
+//        List<Group> groups = groupRepository.findAllByTeacherId_Id(user.getId());
+//        List<Result> results = resultRepository.findAllByCheckedIsFalse();
+//        Map<GroupDto, List<ResultDto>> groupByUnchecked = new HashMap<>();
+//        for (Result result : results) {
+//            if (groups.contains(result.getExam().getGroup())){
+//                List<Result> uncheckedResultsByGroup =
+//                        resultRepository.findUncheckedResultsByGroup(result.getExam().getGroup());
+//                List<ResultDto> resultDtos = new ArrayList<>();
+//                for (Result result1 : uncheckedResultsByGroup) {
+//                    ResultDto resultDto = convertToResultDto(result1);
+//                    resultDtos.add(resultDto);
+//                }
+//                groupByUnchecked.put(convertToGroupDto(result.getExam().getGroup()), resultDtos);
+//                return new ApiResponse("Succesfully retrieved unchecked results", true, HttpStatus.OK, groupByUnchecked);
+//            }
+//        }
+//        return new ApiResponse("You don't have unchecked answers", true, HttpStatus.OK, null);
+//    }
+
+    public ApiResponse getResultByUncheckedOfTeacher(User user) {
+        // Fetch groups taught by the teacher
+        List<Group> groups = groupRepository.findAllByTeacherId_Id(user.getId());
+
+        // Fetch unchecked results
+        List<Result> results = resultRepository.findAllByCheckedIsFalse();
+
+        Map<GroupDto, List<ResultDto>> groupByUnchecked = new HashMap<>();
+
+        // Iterate through groups
+        for (Group group : groups) {
+            List<Result> uncheckedResultsByGroup = new ArrayList<>();
+
+            // Filter results by group
+            for (Result result : results) {
+                if (result.getExam().getGroup().equals(group)) {
+                    uncheckedResultsByGroup.add(result);
+                }
+            }
+
+            // Convert and group results if there are any unchecked results for the group
+            if (!uncheckedResultsByGroup.isEmpty()) {
+                List<ResultDto> resultDtos = new ArrayList<>();
+                for (Result result : uncheckedResultsByGroup) {
+                    ResultDto resultDto = convertToResultDto(result);
+                    resultDtos.add(resultDto);
+                }
+                groupByUnchecked.put(convertToGroupDto(group), resultDtos);
+            }
+        }
+
+        // Check if there are any results to return
+        if (groupByUnchecked.isEmpty()) {
+            return new ApiResponse("You don't have unchecked answers", true, HttpStatus.OK, null);
+        }
+
+        return new ApiResponse("Successfully retrieved unchecked results", true, HttpStatus.OK, groupByUnchecked);
+    }
+
+    private GroupDto convertToGroupDto(Group group){
+        return GroupDto.builder()
+                .id(group.getId())
+                .name(group.getName())
+                .categoryId(group.getCategory().getId())
+                .teacherId(group.getTeacher().getId())
+                .createdAt(group.getCreatedAt())
+                .build();
+    }
+
+    private ResultDto convertToResultDto(Result result){
+        List<AnswerDto> answerDtos = new ArrayList<>();
+        for (Answer answer : result.getAnswer()) {
+            AnswerDto answerDto = convertToAnswerDto(answer);
+            answerDtos.add(answerDto);
+        }
+        return ResultDto.builder()
+                .id(result.getId())
+                .studentId(result.getStudent().getId())
+                .answerDtos(answerDtos)
+                .startTime(result.getStartTime())
+                .endTime(result.getEndTime())
+                .correctCount(result.getCorrectCount())
+                .checked(result.getChecked())
+                .build();
+    }
+
+    private AnswerDto convertToAnswerDto(Answer answer){
+        return AnswerDto.builder()
+                .id(answer.getId())
+                .answer(answer.getAnswer())
+                .correct(answer.isCorrect())
+                .questionId(answer.getQuestion().getId())
                 .build();
     }
 

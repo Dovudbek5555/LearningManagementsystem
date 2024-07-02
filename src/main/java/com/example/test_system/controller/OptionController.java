@@ -6,6 +6,7 @@ import com.example.test_system.service.OptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,11 +15,14 @@ import org.springframework.web.bind.annotation.*;
 public class OptionController {
     private final OptionService optionService;
 
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping
     public HttpEntity<?> addOption(@RequestBody OptionDto optionDto) {
         ApiResponse apiResponse = optionService.saveOption(optionDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping
     public HttpEntity<ApiResponse> getOptions() {
         ApiResponse apiResponse = optionService.getOptionList();
