@@ -4,6 +4,8 @@ public class SecurityConstants {
 
     public static final String[] WHITE_LIST = {
             "auth/**",
+            "/**",
+            "/rating/byDate",
             "/swagger-ui/",
             "/swagger-ui.html",
             "/v2/api-docs",

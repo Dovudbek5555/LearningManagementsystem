@@ -13,12 +13,14 @@ import java.util.List;
 public interface ResultRepository extends JpaRepository<Result, Integer> {
     List<Result> findAllByExam_IdOrderByCorrectCountDesc(Integer examId);
 
-    @Query("SELECT RatingBySumCorrectCount(r.student, SUM(r.correctCount)) " +
+    @Query("SELECT new com.example.dto.RatingBySumCorrectCount(r.student, SUM(r.correctCount)) " +
             "FROM Result r " +
             "WHERE r.exam IN :exams " +
             "GROUP BY r.student " +
             "ORDER BY SUM(r.correctCount) DESC")
     List<RatingBySumCorrectCount> findStudentCorrectCountsByExams(@Param("exams") List<Exam> exams);
+
+
 
 
     @Query("SELECT RatingBySumCorrectCount(r.student, SUM(r.correctCount)) " +
