@@ -36,6 +36,7 @@ public class ExamService {
         Group group = groupRepository.findById(examDto.getGroupId())
                 .orElseThrow(() -> GenericException.builder().message("Group not found").statusCode(404).build());
         Exam exam = Exam.builder()
+                .name(examDto.getName())
                 .test(test)
                 .group(group)
                 .startDate(examDto.getStartDate())
@@ -51,6 +52,7 @@ public class ExamService {
         for (Exam exam : exams) {
             ExamDto examDto= ExamDto.builder()
                     .id(exam.getId())
+                    .name(exam.getName())
                     .startDate(exam.getStartDate())
                     .finishDate(exam.getFinishDate())
                     .groupId(exam.getGroup().getId())
@@ -66,6 +68,7 @@ public class ExamService {
                 .orElseThrow(() -> GenericException.builder().message("Exam not found").build());
         ExamDto examDto= ExamDto.builder()
                 .id(exam.getId())
+                .name(exam.getName())
                 .startDate(exam.getStartDate())
                 .finishDate(exam.getFinishDate())
                 .groupId(exam.getGroup().getId())
@@ -85,6 +88,7 @@ public class ExamService {
         exam.setFinishDate(examDto.getFinishDate());
         exam.setGroup(group);
         exam.setTest(test);
+        exam.setName(examDto.getName());
         examRepository.save(exam);
         return new ApiResponse("Success",true, HttpStatus.OK,null);
 

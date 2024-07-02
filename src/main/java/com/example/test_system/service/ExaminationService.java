@@ -26,33 +26,42 @@ public class ExaminationService {
     private final OptionRepository optionRepository;
     private final GroupRepository groupRepository;
     private final AnswerRepository answerRepository;
+    private final UserRepository userRepository;
 
-    public ApiResponse startTest(Integer id, User user) {
-        Exam exam = fetchExam(id);
+    public ApiResponse startTest(Integer examId, User user) {
+        Exam exam = fetchExam(examId);
 
-        if (!isUserInGroup(exam, user)) {
+        if (!isUserAllowedForExam(exam, user)) {
             return new ApiResponse("Your group is not allowed for this test", false, HttpStatus.METHOD_NOT_ALLOWED, null);
         }
 
-        if (!isExamAvailable(exam.getId())) {
+        if (!isExamAvailable(examId)) {
             return new ApiResponse("This exam is outdated", false, HttpStatus.METHOD_NOT_ALLOWED, null);
         }
 
+        Integer andSaveResult = createAndSaveResult(user, exam);
+
+        return new ApiResponse("Successfully started exam", true, HttpStatus.OK, andSaveResult);
+    }
+
+    private boolean isUserAllowedForExam(Exam exam, User user) {
+        return isUserInGroup(exam, user);
+    }
+
+    private Integer createAndSaveResult(User user, Exam exam) {
         Result result = createResult(user, exam);
-        resultRepository.save(result);
-        ResultDto resultDto = createResultDto(user, exam);
-
-        return new ApiResponse("Successfully started exam", true, HttpStatus.OK, resultDto);
+        Result saved = resultRepository.save(result);
+        return saved.getId();
     }
 
-    private Exam fetchExam(Integer examId) {
-        return examRepository.findById(examId)
-                .orElseThrow(() -> GenericException.builder().message("Exam not found").statusCode(404).build());
-    }
+    private boolean isUserInGroup(Exam exam, User user1) {
+        User user = userRepository.findById(user1.getId()).orElseThrow(() -> GenericException.builder().message("User not found").statusCode(404).build());
+        if (user.getGroup() == null || user.getGroup().isEmpty()) {
+            return false;
+        }
 
-    private boolean isUserInGroup(Exam exam, User user) {
         for (Group group : user.getGroup()) {
-            if (exam.getGroup().getId().equals(group.getId())){
+            if (group.getId().equals(exam.getGroup().getId())) {
                 return true;
             }
         }
@@ -63,8 +72,10 @@ public class ExaminationService {
         return Result.builder()
                 .student(user)
                 .exam(exam)
+                .answer(new ArrayList<>())
                 .startTime(LocalTime.now())
                 .endTime(LocalTime.now().plus(exam.getTest().getDuration()))
+                .correctCount(0)
                 .checked(false)
                 .build();
     }
@@ -80,39 +91,44 @@ public class ExaminationService {
     }
 
     private boolean isExamAvailable(Integer examId) {
-        return examRepository.findById(examId)
-                .map(exam -> exam.getFinishDate().isAfter(LocalDate.now()))
-                .orElse(false);
+        Exam exam = examRepository.findById(examId).orElseThrow(() ->
+                GenericException.builder().message("Exam not found").statusCode(404).build());
+        return exam.getFinishDate().isAfter(LocalDate.now());
     }
+
+    private Exam fetchExam(Integer examId) {
+        return examRepository.findById(examId)
+                .orElseThrow(() -> GenericException.builder().message("Exam not found").statusCode(404).build());
+    }
+
 
 
     public ApiResponse passResult(Integer resultId, List<AnswerDto> answerDtos) {
         Result result = fetchResult(resultId);
         int correctCount = 0;
-        List<Answer> answers = new ArrayList<>();
 
         for (AnswerDto answerDto : answerDtos) {
             Question question = fetchQuestion(answerDto.getQuestionId());
-            int optionCount = optionRepository.countByQuestion(question);
+            Integer optionCount = optionRepository.countByQuestion(question);
 
             if (optionCount > 0) {
-                ApiResponse response = processOptionAnswer(answerDto, correctCount);
+                ApiResponse response = processOptionAnswer(answerDto);
                 if (!response.isSuccess()) {
                     return response;
+                } else {
+                    result.setCorrectCount(result.getCorrectCount() + 1);
                 }
             } else {
                 if (answerDto.getAnswer() == null || answerDto.getAnswer().isEmpty()) {
                     return new ApiResponse("Text answer not provided", false, HttpStatus.BAD_REQUEST, null);
                 }
-                answers.add(createAnswer(question, answerDto.getAnswer()));
+                result.getAnswer().add(createAnswer(question, answerDto.getAnswer()));
             }
         }
 
-        result.setAnswer(answers);
-        result.setCorrectCount(correctCount);
         resultRepository.save(result);
 
-        return new ApiResponse(correctCount == answerDtos.size() ? "Test successfully passed" : "Your exam is claimed", true, HttpStatus.OK, correctCount);
+        return new ApiResponse(correctCount == answerDtos.size() ? "Test successfully passed" : "Your exam is claimed", true, HttpStatus.OK, result.getCorrectCount());
     }
 
     private Result fetchResult(Integer resultId) {
@@ -125,25 +141,25 @@ public class ExaminationService {
                 .orElseThrow(() -> GenericException.builder().message("Question not found").statusCode(404).build());
     }
 
-    private ApiResponse processOptionAnswer(AnswerDto answerDto, int correctCount) {
+    private ApiResponse processOptionAnswer(AnswerDto answerDto) {
         if (answerDto.getOptionId() == 0) {
             return new ApiResponse("No option selected", false, HttpStatus.BAD_REQUEST, null);
         }
 
         Optional<Option> option = optionRepository.findById(answerDto.getOptionId());
-        if (option.isPresent() && option.get().getStatus()) {
-            correctCount++;
+        if (option.isPresent() && option.get().getStatus()){
             return new ApiResponse(null, true, HttpStatus.OK, null);
         }
         return new ApiResponse("Option not found or incorrect", false, HttpStatus.NOT_FOUND, null);
     }
 
     private Answer createAnswer(Question question, String answerText) {
-        return Answer.builder()
+        Answer answer = Answer.builder()
                 .question(question)
                 .answer(answerText)
                 .correct(false)
                 .build();
+        return answerRepository.save(answer);
     }
 
 //    private ApiResponse getResultByUncheckedOfTeacher(User user){

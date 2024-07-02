@@ -22,7 +22,8 @@ public class QuestionService {
     private final SubCategoryRepository subCategoryRepository;
 
     public ApiResponse saveQuestion(QuestionDto questionDto){
-        SubCategory subCategory = subCategoryRepository.findById(questionDto.getSubCategoryId()).orElseThrow(() -> GenericException.builder()
+        SubCategory subCategory = subCategoryRepository.findById(questionDto.getSubCategoryId()).orElseThrow(() ->
+                GenericException.builder()
                 .message("Question not fond")
                 .statusCode(400)
                 .build());
@@ -31,7 +32,7 @@ public class QuestionService {
             Question question = Question.builder()
                     .question(questionDto.getQuestion())
                     .subCategory(subCategory)
-                    .difficulty(DifficultyEnum.valueOf(questionDto.getDifficultyEnum()))
+                    .difficulty(DifficultyEnum.valueOf(questionDto.getDifficultyEnum().toUpperCase()))
                     .build();
             questionRepository.save(question);
             return new ApiResponse("Question successfully saved", true, HttpStatus.OK, null);

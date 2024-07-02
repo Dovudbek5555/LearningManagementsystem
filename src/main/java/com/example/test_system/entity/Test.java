@@ -21,7 +21,7 @@ public class Test {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany
+    @ManyToMany
     private List<Question> questionList;
 
     @CreatedDate

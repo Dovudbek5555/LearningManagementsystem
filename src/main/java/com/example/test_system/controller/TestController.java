@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/start-test")
+@RequestMapping("/test")
 @RequiredArgsConstructor
 public class TestController {
     private final TestService testService;
