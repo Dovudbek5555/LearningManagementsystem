@@ -45,5 +45,16 @@ public class UserController {
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
+    @GetMapping("{/id}")
+    public HttpEntity<ApiResponse> getStudentByGroupId(@PathVariable Integer id){
+        ApiResponse apiResponse = userService.getStudentByGroupId(id);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+
+    @GetMapping("{/id}")
+    public HttpEntity<ApiResponse> getStudentByTeacherId(@PathVariable UUID id){
+        ApiResponse apiResponse = userService.getStudentByTeacherId(id);
+        return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
 
 }
