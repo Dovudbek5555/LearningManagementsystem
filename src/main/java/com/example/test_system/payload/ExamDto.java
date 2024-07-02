@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Builder
 public class ExamDto {
     private Integer id;
+    private String name;
     private Integer groupId;
     private Integer testId;
     private LocalDate startDate;

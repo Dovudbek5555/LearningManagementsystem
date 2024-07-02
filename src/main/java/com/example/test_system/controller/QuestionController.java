@@ -8,6 +8,7 @@ import com.example.test_system.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,34 +17,40 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionController {
     private final QuestionService questionService;
 
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping
     public HttpEntity<ApiResponse> saveQuestion(@RequestBody QuestionDto questionDto) {
         ApiResponse apiResponse = questionService.saveQuestion(questionDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
-
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping
     public HttpEntity<ApiResponse> getAllQuestions() {
         ApiResponse questionList = questionService.getQuestionList();
         return ResponseEntity.status(questionList.getHttpStatus()).body(questionList);
     }
+
+    @PreAuthorize("hasRole('TEACHER')")
     @PutMapping
     public HttpEntity<ApiResponse> updateQuestion(@RequestBody QuestionDto questionDto) {
         ApiResponse apiResponse = questionService.updateQuestion(questionDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
+    @PreAuthorize("hasRole('TEACHER')")
     @DeleteMapping("/{id}")
     public HttpEntity<ApiResponse> deleteQuestion(@PathVariable Integer id) {
         ApiResponse apiResponse = questionService.deleteQuestion(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/byDifficulty")
     public HttpEntity<ApiResponse> filterQuestionByDifficulty(@RequestParam String difficulty) {
         ApiResponse apiResponse = questionService.filterQuestionByDifficulty(difficulty);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/bySubCategory")
     public HttpEntity<ApiResponse> filterQuestionBySubCategory(@RequestParam Integer subCategoryId) {
         ApiResponse apiResponse = questionService.filterQuestionBySubCategory(subCategoryId);

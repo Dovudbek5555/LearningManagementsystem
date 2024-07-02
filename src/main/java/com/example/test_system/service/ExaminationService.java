@@ -4,6 +4,7 @@ import com.example.test_system.entity.*;
 import com.example.test_system.exceptions.GenericException;
 import com.example.test_system.payload.AnswerDto;
 import com.example.test_system.payload.ApiResponse;
+import com.example.test_system.payload.GroupDto;
 import com.example.test_system.payload.ResultDto;
 import com.example.test_system.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,38 +24,44 @@ public class ExaminationService {
     private final ResultRepository resultRepository;
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
+    private final GroupRepository groupRepository;
+    private final AnswerRepository answerRepository;
+    private final UserRepository userRepository;
 
-    public ApiResponse startTest(Integer id, User user) {
-        Exam exam = fetchExam(id);
+    public ApiResponse startTest(Integer examId, User user) {
+        Exam exam = fetchExam(examId);
 
-        if (!isUserInGroup(exam, user)) {
+        if (!isUserAllowedForExam(exam, user)) {
             return new ApiResponse("Your group is not allowed for this test", false, HttpStatus.METHOD_NOT_ALLOWED, null);
         }
 
-        if (!isExamAvailable(exam.getId())) {
+        if (!isExamAvailable(examId)) {
             return new ApiResponse("This exam is outdated", false, HttpStatus.METHOD_NOT_ALLOWED, null);
         }
 
+        Integer andSaveResult = createAndSaveResult(user, exam);
+
+        return new ApiResponse("Successfully started exam", true, HttpStatus.OK, andSaveResult);
+    }
+
+    private boolean isUserAllowedForExam(Exam exam, User user) {
+        return isUserInGroup(exam, user);
+    }
+
+    private Integer createAndSaveResult(User user, Exam exam) {
         Result result = createResult(user, exam);
-        resultRepository.save(result);
-        ResultDto resultDto = createResultDto(user, exam);
-
-        return new ApiResponse("Successfully started exam", true, HttpStatus.OK, resultDto);
+        Result saved = resultRepository.save(result);
+        return saved.getId();
     }
 
-    private Exam fetchExam(Integer examId) {
-        return examRepository.findById(examId)
-                .orElseThrow(() -> GenericException.builder().message("Exam not found").statusCode(404).build());
-    }
+    private boolean isUserInGroup(Exam exam, User user1) {
+        User user = userRepository.findById(user1.getId()).orElseThrow(() -> GenericException.builder().message("User not found").statusCode(404).build());
+        if (user.getGroup() == null || user.getGroup().isEmpty()) {
+            return false;
+        }
 
-    private Test fetchTest(Integer testId) {
-        return testRepository.findById(testId)
-                .orElseThrow(() -> GenericException.builder().message("Test not found").statusCode(404).build());
-    }
-
-    private boolean isUserInGroup(Exam exam, User user) {
         for (Group group : user.getGroup()) {
-            if (exam.getGroup().getId().equals(group.getId())){
+            if (group.getId().equals(exam.getGroup().getId())) {
                 return true;
             }
         }
@@ -67,8 +72,10 @@ public class ExaminationService {
         return Result.builder()
                 .student(user)
                 .exam(exam)
+                .answer(new ArrayList<>())
                 .startTime(LocalTime.now())
                 .endTime(LocalTime.now().plus(exam.getTest().getDuration()))
+                .correctCount(0)
                 .checked(false)
                 .build();
     }
@@ -83,40 +90,45 @@ public class ExaminationService {
                 .build();
     }
 
-    public boolean isExamAvailable(Integer examId) {
-        return examRepository.findById(examId)
-                .map(exam -> exam.getFinishDate().isAfter(LocalDate.now()))
-                .orElse(false);
+    private boolean isExamAvailable(Integer examId) {
+        Exam exam = examRepository.findById(examId).orElseThrow(() ->
+                GenericException.builder().message("Exam not found").statusCode(404).build());
+        return exam.getFinishDate().isAfter(LocalDate.now());
     }
+
+    private Exam fetchExam(Integer examId) {
+        return examRepository.findById(examId)
+                .orElseThrow(() -> GenericException.builder().message("Exam not found").statusCode(404).build());
+    }
+
 
 
     public ApiResponse passResult(Integer resultId, List<AnswerDto> answerDtos) {
         Result result = fetchResult(resultId);
         int correctCount = 0;
-        List<Answer> answers = new ArrayList<>();
 
         for (AnswerDto answerDto : answerDtos) {
             Question question = fetchQuestion(answerDto.getQuestionId());
-            int optionCount = optionRepository.countByQuestion(question);
+            Integer optionCount = optionRepository.countByQuestion(question);
 
             if (optionCount > 0) {
-                ApiResponse response = processOptionAnswer(answerDto, correctCount);
+                ApiResponse response = processOptionAnswer(answerDto);
                 if (!response.isSuccess()) {
                     return response;
+                } else {
+                    result.setCorrectCount(result.getCorrectCount() + 1);
                 }
             } else {
                 if (answerDto.getAnswer() == null || answerDto.getAnswer().isEmpty()) {
                     return new ApiResponse("Text answer not provided", false, HttpStatus.BAD_REQUEST, null);
                 }
-                answers.add(createAnswer(question, answerDto.getAnswer()));
+                result.getAnswer().add(createAnswer(question, answerDto.getAnswer()));
             }
         }
 
-        result.setAnswer(answers);
-        result.setCorrectCount(correctCount);
         resultRepository.save(result);
 
-        return new ApiResponse(correctCount == answerDtos.size() ? "Test successfully passed" : "Your exam is claimed", true, HttpStatus.OK, correctCount);
+        return new ApiResponse(correctCount == answerDtos.size() ? "Test successfully passed" : "Your exam is claimed", true, HttpStatus.OK, result.getCorrectCount());
     }
 
     private Result fetchResult(Integer resultId) {
@@ -129,25 +141,143 @@ public class ExaminationService {
                 .orElseThrow(() -> GenericException.builder().message("Question not found").statusCode(404).build());
     }
 
-    private ApiResponse processOptionAnswer(AnswerDto answerDto, int correctCount) {
+    private ApiResponse processOptionAnswer(AnswerDto answerDto) {
         if (answerDto.getOptionId() == 0) {
             return new ApiResponse("No option selected", false, HttpStatus.BAD_REQUEST, null);
         }
 
         Optional<Option> option = optionRepository.findById(answerDto.getOptionId());
-        if (option.isPresent() && option.get().getStatus()) {
-            correctCount++;
+        if (option.isPresent() && option.get().getStatus()){
             return new ApiResponse(null, true, HttpStatus.OK, null);
         }
         return new ApiResponse("Option not found or incorrect", false, HttpStatus.NOT_FOUND, null);
     }
 
     private Answer createAnswer(Question question, String answerText) {
-        return Answer.builder()
+        Answer answer = Answer.builder()
                 .question(question)
                 .answer(answerText)
                 .correct(false)
                 .build();
+        return answerRepository.save(answer);
+    }
+
+//    private ApiResponse getResultByUncheckedOfTeacher(User user){
+//        List<Group> groups = groupRepository.findAllByTeacherId_Id(user.getId());
+//        List<Result> results = resultRepository.findAllByCheckedIsFalse();
+//        Map<GroupDto, List<ResultDto>> groupByUnchecked = new HashMap<>();
+//        for (Result result : results) {
+//            if (groups.contains(result.getExam().getGroup())){
+//                List<Result> uncheckedResultsByGroup =
+//                        resultRepository.findUncheckedResultsByGroup(result.getExam().getGroup());
+//                List<ResultDto> resultDtos = new ArrayList<>();
+//                for (Result result1 : uncheckedResultsByGroup) {
+//                    ResultDto resultDto = convertToResultDto(result1);
+//                    resultDtos.add(resultDto);
+//                }
+//                groupByUnchecked.put(convertToGroupDto(result.getExam().getGroup()), resultDtos);
+//                return new ApiResponse("Succesfully retrieved unchecked results", true, HttpStatus.OK, groupByUnchecked);
+//            }
+//        }
+//        return new ApiResponse("You don't have unchecked answers", true, HttpStatus.OK, null);
+//    }
+
+    public ApiResponse getResultByUncheckedOfTeacher(User user) {
+        // Fetch groups taught by the teacher
+        List<Group> groups = groupRepository.findAllByTeacherId_Id(user.getId());
+
+        // Fetch unchecked results
+        List<Result> results = resultRepository.findAllByCheckedIsFalse();
+
+        Map<GroupDto, List<ResultDto>> groupByUnchecked = new HashMap<>();
+
+        // Iterate through groups
+        for (Group group : groups) {
+            List<Result> uncheckedResultsByGroup = new ArrayList<>();
+
+            // Filter results by group
+            for (Result result : results) {
+                if (result.getExam().getGroup().equals(group)) {
+                    uncheckedResultsByGroup.add(result);
+                }
+            }
+
+            // Convert and group results if there are any unchecked results for the group
+            if (!uncheckedResultsByGroup.isEmpty()) {
+                List<ResultDto> resultDtos = new ArrayList<>();
+                for (Result result : uncheckedResultsByGroup) {
+                    ResultDto resultDto = convertToResultDto(result);
+                    resultDtos.add(resultDto);
+                }
+                groupByUnchecked.put(convertToGroupDto(group), resultDtos);
+            }
+        }
+
+        // Check if there are any results to return
+        if (groupByUnchecked.isEmpty()) {
+            return new ApiResponse("You don't have unchecked answers", true, HttpStatus.OK, null);
+        }
+
+        return new ApiResponse("Successfully retrieved unchecked results", true, HttpStatus.OK, groupByUnchecked);
+    }
+
+    private GroupDto convertToGroupDto(Group group){
+        return GroupDto.builder()
+                .id(group.getId())
+                .name(group.getName())
+                .categoryId(group.getCategory().getId())
+                .teacherId(group.getTeacher().getId())
+                .createdAt(group.getCreatedAt())
+                .build();
+    }
+
+    private ResultDto convertToResultDto(Result result){
+        List<AnswerDto> answerDtos = new ArrayList<>();
+        for (Answer answer : result.getAnswer()) {
+            AnswerDto answerDto = convertToAnswerDto(answer);
+            answerDtos.add(answerDto);
+        }
+        return ResultDto.builder()
+                .id(result.getId())
+                .studentId(result.getStudent().getId())
+                .answerDtos(answerDtos)
+                .startTime(result.getStartTime())
+                .endTime(result.getEndTime())
+                .correctCount(result.getCorrectCount())
+                .checked(result.getChecked())
+                .build();
+    }
+
+    private AnswerDto convertToAnswerDto(Answer answer){
+        return AnswerDto.builder()
+                .id(answer.getId())
+                .answer(answer.getAnswer())
+                .correct(answer.isCorrect())
+                .questionId(answer.getQuestion().getId())
+                .build();
+    }
+
+    public ApiResponse checkAnswer(Integer answerId, Boolean isCorrect) {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> GenericException.builder().message("Answer not found").statusCode(404).build());
+        if (isCorrect) {
+            Result result = resultRepository.findByAnswerContains(answer);
+            result.getAnswer().remove(answer);
+            answerRepository.delete(answer);
+            result.setCorrectCount(result.getCorrectCount()+1);
+            if (result.getAnswer().isEmpty()){
+                result.setChecked(true);
+                resultRepository.save(result);
+                return new ApiResponse("Checked", true, HttpStatus.OK, null);
+            }
+            resultRepository.save(result);
+            return new ApiResponse("Checked", true, HttpStatus.OK, null);
+        } else {
+            Result result = resultRepository.findByAnswerContains(answer);
+            result.getAnswer().remove(answer);
+            answerRepository.delete(answer);
+            resultRepository.save(result);
+        }
+        return new ApiResponse("Failed", true, HttpStatus.OK, null);
     }
 
 }

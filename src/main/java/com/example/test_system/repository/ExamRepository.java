@@ -12,4 +12,7 @@ import java.util.List;
 public interface ExamRepository extends JpaRepository<Exam, Integer> {
     @Query("SELECT e FROM Exam e WHERE e.startDate >= :startDate AND e.finishDate <= :endDate")
     List<Exam> findExamsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    List<Exam> findAllByGroup_IdAndFinishDateAfter(Integer id, LocalDate date);
+    Integer countByCreatedAtAfter(LocalDate date);
 }

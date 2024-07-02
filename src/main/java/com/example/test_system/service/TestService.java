@@ -69,17 +69,15 @@ public class TestService {
         List<Test> testList = testRepository.findAll();
         List<TestDto> testDtoList=new ArrayList<>();
         for (Test test : testList) {
-            for (Question question : test.getQuestionList()) {
                 TestDto testDto = TestDto.builder()
                         .id(test.getId())
                         .createdAt(test.getCreatedAt())
                         .passingScore(test.getPassingScore())
                         .duration((int) test.getDuration().toMinutes())
                         .questionCount(test.getQuestionList().size() )
+                        .subCategoryId(test.getSubCategory().getId())
                         .build();
                 testDtoList.add(testDto);
-            }
-
         }
         return new ApiResponse("Success",true,HttpStatus.OK,testDtoList);
     }
@@ -123,7 +121,7 @@ public class TestService {
                         .createdAt(test.getCreatedAt())
                         .passingScore(test.getPassingScore())
                         .duration((int) test.getDuration().toMinutes())
-                        .questionId(question.getId())
+                        .questionCount(test.getQuestionList().size())
                         .build();
                 testDtoList.add(testDto);
             }

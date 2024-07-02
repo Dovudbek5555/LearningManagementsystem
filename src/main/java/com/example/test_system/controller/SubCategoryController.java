@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,11 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SubCategoryController {
     private final SubCategoryService subCategoryService;
+
+    @PreAuthorize("hasRole('TEACHER') or hasRole('ADMIN')")
     @PostMapping
     public HttpEntity<ApiResponse> addSubCategory(@RequestBody SubCategoryDto subCategoryDto) {
         ApiResponse apiResponse = subCategoryService.saveSubCategory(subCategoryDto);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
+    @PreAuthorize("hasRole('TEACHER') or hasRole('ADMIN')")
     @GetMapping
     public HttpEntity<ApiResponse> getSubCategoryList() {
         ApiResponse apiResponse = subCategoryService.getSubCategory();
@@ -41,6 +45,12 @@ public class SubCategoryController {
     public HttpEntity<ApiResponse> deleteSubCategory(@PathVariable Integer id) {
         ApiResponse apiResponse = subCategoryService.deleteSubCategory(id);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
+    }
+
+    @GetMapping("/byCategory")
+    public HttpEntity<ApiResponse> getSubCategoryByCategory(@RequestParam Integer categoryId) {
+        ApiResponse category = subCategoryService.findAllByCategory(categoryId);
+        return ResponseEntity.status(category.getHttpStatus()).body(category);
     }
 }
 
