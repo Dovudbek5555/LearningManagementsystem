@@ -5,6 +5,7 @@ import com.example.test_system.entity.Result;
 import com.example.test_system.entity.User;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.RatingBySumCorrectCount;
+import com.example.test_system.payload.RatingDto;
 import com.example.test_system.payload.ResultDto;
 import com.example.test_system.repository.ExamRepository;
 import com.example.test_system.repository.GroupRepository;
@@ -51,8 +52,8 @@ public class RatingService {
         return new ApiResponse("Top students retrieved successfully", true, HttpStatus.OK, resultDtos);
     }
 
-    public ApiResponse getTopStudentByDate(LocalDate startDate, LocalDate finishDate){
-        List<Exam> examsBetweenDates = examRepository.findExamsBetweenDates(startDate, finishDate);
+    public ApiResponse getTopStudentByDate(RatingDto ratingDto){
+        List<Exam> examsBetweenDates = examRepository.findExamsBetweenDates(ratingDto.getStartDate(),ratingDto.getFinishDate());
         List<RatingBySumCorrectCount> studentCorrectCountsByExams = resultRepository.findStudentCorrectCountsByExams(examsBetweenDates);
         return new ApiResponse("Top students retrieved successfully", true, HttpStatus.OK, studentCorrectCountsByExams);
     }
