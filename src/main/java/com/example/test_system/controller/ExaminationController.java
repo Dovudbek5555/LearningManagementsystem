@@ -32,7 +32,7 @@ public class ExaminationController {
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping("/pass-test/{resultId}")
     public HttpEntity<ApiResponse> passResult(@PathVariable Integer resultId, @RequestBody List<AnswerDto> answerDtos){
-        ApiResponse apiResponse = examinationService.passResult(resultId, answerDtos);
+            ApiResponse apiResponse = examinationService.passResult(resultId, answerDtos);
         return ResponseEntity.status(apiResponse.getHttpStatus()).body(apiResponse);
     }
 

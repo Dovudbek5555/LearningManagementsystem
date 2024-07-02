@@ -3,6 +3,7 @@ package com.example.test_system.entity;
 import com.example.test_system.entity.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

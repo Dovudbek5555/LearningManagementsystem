@@ -20,7 +20,7 @@ import java.util.UUID;
 public class GroupController {
     private final GroupService groupService;
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('ADMIN')")
     @PostMapping
     public HttpEntity<ApiResponse> saveGroup(@RequestBody GroupDto group) {
 //        user rolini priauthoritoryda tekshirish kerak

@@ -49,9 +49,11 @@ public class GroupService {
         List<GroupDto> groupDtos = new ArrayList<>();
         for (Group group : groups) {
             GroupDto groupDto= GroupDto.builder()
+                    .id(group.getId())
                     .name(group.getName())
                     .categoryId(group.getCategory().getId())
                     .teacherId(group.getTeacher().getId())
+                    .createdAt(group.getCreatedAt())
                     .build();
             groupDtos.add(groupDto);
         }
