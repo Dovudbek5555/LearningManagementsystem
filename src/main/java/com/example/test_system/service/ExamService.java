@@ -3,6 +3,7 @@ package com.example.test_system.service;
 import com.example.test_system.entity.Exam;
 import com.example.test_system.entity.Group;
 import com.example.test_system.entity.Test;
+import com.example.test_system.entity.User;
 import com.example.test_system.exceptions.GenericException;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.ExamDto;
@@ -41,8 +42,8 @@ public class ExamService {
         return new ApiResponse("Success",true, HttpStatus.OK,null);
     }
 
-    public ApiResponse getAllExams() {
-        List<Exam> exams = examRepository.findAll();
+    public ApiResponse getAllExams(User user) {
+        List<Exam> exams = examRepository.findAllByCreatedBy(user.getId());
         List<ExamDto> examDtos=new ArrayList<>();
         for (Exam exam : exams) {
             ExamDto examDto= ExamDto.builder()
