@@ -68,7 +68,7 @@ public class RatingService {
     }
 
 
-
+//    Imtihon ishlagan studentlarning reytingi
     public ApiResponse getTopStudentsByGroup(Integer groupId){
         List<User> allByGroupId = userRepository.findAllByGroup_Id(groupId);
         List<RatingBySumCorrectCount> studentCorrectCountsByGroups = resultRepository.findStudentCorrectCountsByGroups(allByGroupId);
