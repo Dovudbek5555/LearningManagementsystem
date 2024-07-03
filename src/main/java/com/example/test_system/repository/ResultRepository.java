@@ -13,21 +13,12 @@ import java.util.List;
 public interface ResultRepository extends JpaRepository<Result, Integer> {
     List<Result> findAllByExam_IdOrderByCorrectCountDesc(Integer examId);
 
-    @Query("SELECT new com.example.dto.RatingBySumCorrectCount(r.student, SUM(r.correctCount)) " +
-            "FROM Result r " +
-            "WHERE r.exam IN :exams " +
-            "GROUP BY r.student " +
-            "ORDER BY SUM(r.correctCount) DESC")
-    List<RatingBySumCorrectCount> findStudentCorrectCountsByExams(@Param("exams") List<Exam> exams);
+    @Query("SELECT new com.example.test_system.payload.RatingBySumCorrectCount(r.student.id, r.student.firstname, SUM(r.correctCount)) " +
+            "FROM Result r WHERE r.exam IN :exams GROUP BY r.student.id, r.student.firstname ORDER BY SUM(r.correctCount) DESC")
+    List<RatingBySumCorrectCount> findStudentCorrectCountsByExams(List<Exam> exams);
 
-
-
-
-    @Query("SELECT RatingBySumCorrectCount(r.student, SUM(r.correctCount)) " +
-            "FROM Result r " +
-            "WHERE r.student IN :users " +
-            "GROUP BY r.student " +
-            "ORDER BY SUM(r.correctCount) DESC")
+@Query("SELECT new com.example.test_system.payload.RatingBySumCorrectCount(r.student.id, r.student.firstname, SUM(r.correctCount)) " +
+        "FROM Result r WHERE r.student IN :user GROUP BY r.student.id, r.student.firstname ORDER BY SUM(r.correctCount) DESC")
     List<RatingBySumCorrectCount> findStudentCorrectCountsByGroups(@Param("user") List<User> users);
 
 

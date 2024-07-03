@@ -1,12 +1,10 @@
 package com.example.test_system.service;
 
+import com.example.test_system.entity.Answer;
 import com.example.test_system.entity.Exam;
 import com.example.test_system.entity.Result;
 import com.example.test_system.entity.User;
-import com.example.test_system.payload.ApiResponse;
-import com.example.test_system.payload.RatingBySumCorrectCount;
-import com.example.test_system.payload.RatingDto;
-import com.example.test_system.payload.ResultDto;
+import com.example.test_system.payload.*;
 import com.example.test_system.repository.ExamRepository;
 import com.example.test_system.repository.GroupRepository;
 import com.example.test_system.repository.ResultRepository;
@@ -37,12 +35,23 @@ public class RatingService {
             return new ApiResponse("No results found for the specified exam", false, HttpStatus.NOT_FOUND, null);
         }
         List<ResultDto> resultDtos = new ArrayList<>();
+        List<AnswerDto> answerDtos = new ArrayList<>();
         for (Result result : results) {
+            for (Answer answer : result.getAnswer()) {
+                AnswerDto answerDto=AnswerDto.builder()
+                        .answer(answer.getAnswer())
+                        .correct(answer.isCorrect())
+                        .questionId(answer.getQuestion().getId())
+                        .optionId(answer.getOption().getId())
+                        .build();
+                answerDtos.add(answerDto);
+            }
             ResultDto resultDto = ResultDto.builder().id(result.getId())
                     .studentId(result.getStudent().getId())
                     .examId(result.getExam().getId())
                     .correctCount(result.getCorrectCount())
                     .startTime(result.getStartTime())
+                    .answerDtos(answerDtos)
                     .endTime(result.getEndTime())
                     .checked(result.getChecked())
                     .build();
@@ -59,10 +68,10 @@ public class RatingService {
     }
 
 
-
+//    Imtihon ishlagan studentlarning reytingi
     public ApiResponse getTopStudentsByGroup(Integer groupId){
         List<User> allByGroupId = userRepository.findAllByGroup_Id(groupId);
         List<RatingBySumCorrectCount> studentCorrectCountsByGroups = resultRepository.findStudentCorrectCountsByGroups(allByGroupId);
-        return new ApiResponse("Top students retrieved successfully", true, HttpStatus.OK, studentCorrectCountsByGroups);
+        return new ApiResponse("Top students retrieved successfully", true, HttpStatus.OK, studentCorrectCountsByGroups );
     }
 }

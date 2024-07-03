@@ -17,5 +17,4 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     List<Group> findAllByTeacherId_Id(UUID teacherId);
     List<Group> findAllByCategory_Id(Integer categoryId);
     Integer countByCreatedAtAfter(LocalDate date);
-    List<Group> findByTeacher_Id(UUID id);
 }

@@ -35,9 +35,9 @@ public class RatingController {
     }
 
     @PreAuthorize("hasRole('TEACHER') or hasRole('ADMIN')")
-    @GetMapping("/byGroup")
-    public HttpEntity<ApiResponse> getTopStudentRatingByGroup(@RequestParam Integer group){
-        ApiResponse topStudentsByGroup = ratingService.getTopStudentsByGroup(group);
+    @GetMapping("/byGroup/{groupId}")
+    public HttpEntity<ApiResponse> getTopStudentRatingByGroup(@PathVariable Integer groupId){
+        ApiResponse topStudentsByGroup = ratingService.getTopStudentsByGroup(groupId);
         return ResponseEntity.ok(topStudentsByGroup);
     }
 
