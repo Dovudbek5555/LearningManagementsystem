@@ -1,13 +1,10 @@
 package com.example.test_system.controller;
 
-import com.example.test_system.entity.User;
 import com.example.test_system.payload.ApiResponse;
 import com.example.test_system.payload.ExamDto;
-import com.example.test_system.security.CurrentUser;
 import com.example.test_system.service.ExamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
